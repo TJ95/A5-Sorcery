@@ -24,7 +24,7 @@ The display.
 
 ## Schedule:
 
-###Mon(Mar.27):
+### Mon(Mar.27):
 
 Basic implementations of Player and the game loop (Tianjun)
 
@@ -62,7 +62,7 @@ Enchantment works as Decorator of the Minion class, ability to recognize Enchant
 Ritual works similarly to Minion, with a method that deducts charges every turn.
 
 
-###Thurs
+### Thurs
 
 Gameplay&testing (Tina, Tianjun)
 

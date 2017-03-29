@@ -2,13 +2,13 @@
 
 Minion::~Minion() {}
 
-void Minion::beat(Player P) {
+void Minion::attack(Player P) {
     P.LifeModify(-attack);
 }
 
-void Minion::beat(Minion* m) {
+void Minion::attack(Minion* m) {
     m->modifySTAT (0, -attack);
-    this->modifySTAT(0,-attack);
+    this->modifySTAT(0,-(m->getAttack());
 }
 
 void Minion::die(Player P) {

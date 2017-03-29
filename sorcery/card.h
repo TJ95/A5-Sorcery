@@ -1,14 +1,17 @@
-#ifndef card_hpp
-#define card_hpp
+#ifndef _CARD_H_
+#define _CARD_H_
+#include "cardtype.h"
 
 #include <string>
 
 class Card {
     int cost;
     std::string name;
-    std::string type;
 public:
     Card(int c, std::string n, std::string t);
+    int getCost();
+    string getName();
+    virtual CardType getType();
     virtual ~Card() = 0;
 };
 

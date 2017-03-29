@@ -19,7 +19,23 @@ int Minion::getATK() {
     return attack;
 }
 
+int Minion::getDEF() {
+    return defence;
+}
+
+int Minion::setDEF(int def) {
+    defence = def;
+}
+
+int Minion::setATK(int attk) {
+    attack = attk;
+}
+
 void Minion::modifySTAT(int a, int d) {
     attack += a;
     defence += d;
+}
+
+CardType getType(){
+	return CardType::Minion;
 }

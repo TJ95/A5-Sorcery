@@ -16,6 +16,7 @@ public:
     void attack(Minion* m);
     void die(Player P);
     int getATK();
+    int getDEF();
     void setATK(int a);
     void setDEF(int d);
     void modifySTAT(int a, int d);

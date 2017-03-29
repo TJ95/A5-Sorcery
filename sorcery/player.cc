@@ -3,6 +3,7 @@
 #include "subject.hpp"
 #include "card.hpp"
 #include "minion.hpp"
+#include "cardtype.h"
 
 
 using namespace std;
@@ -55,23 +56,42 @@ void Player::play(int card) { //summon&place ritual
     }
 }
 
-void Player::play(int card, int targ, Player* p) { //spell&enchant
+void Player::play(int card, int targ, Player* p) {
     shared_ptr<Card> temp = Hand[card - 1];
     if (current_magic >= temp->getCost()) {
-        if (temp->getType() == Spell) {
-            if ((targ == -1)&&(!p)) {
+        //if (temp->getType() == Spell) {
+        if ((targ == -1)&&(!p)) { //no target
+            if (temp->getType() == Spell) {
                 temp->castSpell(this);
+                CurMagicModify(-(temp->getCost())); //spell w/o target
+                Graveyard.emplace_back(temp);
+                Hand.erase(Hand.begin() + card - 1);
+            } else if (temp->getType() == Minion) { //minion
+                for (int i = 0; i < 5; i++) {
+                    if (i == 5) {
+                        cout << "board has no space" << endl;
+                        break;
+                    }
+                    else if (!Board[i]) {
+                        Board[i] = temp;
+                        Hand.erase(Hand.begin() + card - 1);
+                        CurMagicModify(-(temp->getCost()));
+                        break;
+                    }
+                }
+            } else if (temp->getType() == Ritual) { //ritual
+                if (!Board[5]) {
+                    Graveyard.emplace_back(Board[5]);
+                    Board.erase(Board.begin() + 5);
+                }
                 CurMagicModify(-(temp->getCost()));
-                
-            } else if (targ == -1) {
-                temp->castSpell(this, p);
-            } else {
-                temp->castSpell(p, card, targ);
+                Board[5] = temp;
+                Hand.erase(Hand.begin() + card - 1);
             }
-            Graveyard.emplace_back(temp);
-            Hand.erase(Hand.begin() + card - 1);
-        } else if (temp->getType() == Enchantment) {
-            //target = make_shared<Card>(temp, target);
+        } else if ((targ == -1)&&p) {
+            temp->castSpell(this, p); //aoe spell
+        } else {
+            temp->castSpell(p, targ); //spell w target
         }
     } else {
         cout << "not enough mana!" << endl;

@@ -30,8 +30,8 @@ public:
     void MagicModify(int n);
     void CurMagicModify(int n);
     void CurMagicSet(int n);
-    void play(int card); //plays a Minion/Ritual/Non-targeted Spell
-    void play(int card, std::shared_ptr<Card> target); //plays a targeted Spell/Minion ability
+    void play(int card); //plays a minion/ritual
+    void play(int card, int targ, Player* p); //plays a targeted Spell/Enchant
     std::shared_ptr<Card> getBoard (int slot);
     void draw(int time); //draw adds the first element of Deck to Hand
     //  while removing that element from Deck

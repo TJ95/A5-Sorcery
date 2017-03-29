@@ -25,10 +25,10 @@ void Player::CurMagicSet(int n) {
 }
 
 
-void Player::play(int card) {
+void Player::play(int card) { //summon&place ritual
     shared_ptr<Card> temp = Hand[card - 1];
     if (current_magic >= temp->getCost()) {
-        if (temp->getType() == "Minion") {
+        if (temp->getType() == Minion) {
             for (int i = 0; i < 5; i++) {
                 if (i == 5) {
                     cout << "board has no space" << endl;
@@ -41,12 +41,7 @@ void Player::play(int card) {
                     break;
                 }
             }
-        } else if (temp->getType() == "Spell") {
-            //temp.castSpell();
-            CurMagicModify(-(temp->getCost()));
-            Graveyard.emplace_back(temp);
-            Hand.erase(Hand.begin() + card - 1);
-        } else if (temp->getType() == "Ritual") {
+        } else if (temp->getType() == Ritual) {
             if (!Board[5]) {
                 Graveyard.emplace_back(Board[5]);
                 Board.erase(Board.begin() + 5);
@@ -60,16 +55,23 @@ void Player::play(int card) {
     }
 }
 
-void Player::play(int card, shared_ptr<Card> target) {
+void Player::play(int card, int targ, Player* p) { //spell&enchant
     shared_ptr<Card> temp = Hand[card - 1];
     if (current_magic >= temp->getCost()) {
-        if (temp->getType() == "Spell") {
-            //temp.castSpell(target);
+        if (temp->getType() == Spell) {
+            if ((targ == -1)&&(!p)) {
+                temp->castSpell(this);
+                CurMagicModify(-(temp->getCost()));
+                
+            } else if (targ == -1) {
+                temp->castSpell(this, p);
+            } else {
+                temp->castSpell(p, card, targ);
+            }
             Graveyard.emplace_back(temp);
             Hand.erase(Hand.begin() + card - 1);
-        } else if (temp->getType() == "Enchantment") {
+        } else if (temp->getType() == Enchantment) {
             //target = make_shared<Card>(temp, target);
-            Graveyard.emplace_back(temp);
         }
     } else {
         cout << "not enough mana!" << endl;

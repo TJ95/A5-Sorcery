@@ -3,8 +3,8 @@
 #include <vector>
 #include <fstream>
 
-//#include "player.hpp"
-//#include "card.hpp"
+#include "player.hpp"
+#include "card.hpp"
 
 using namespace std;
 
@@ -23,10 +23,14 @@ vector<string> deck_loader(string deckname) {
 int main(int argc, char* argv[]) {
     cin.exceptions(ios::eofbit|ios::failbit);
     string cmd, aux;
-    //Player p1;
-    //Player p2;
-    //bool p1_active = true;
-    //int turnno = 0;
+    int num;
+    int num2;
+    Player p1;
+    Player p2;
+    Player* activeP = &p1;
+    Player* otherP = &p2;
+    
+    int turnno = 0;
     bool isTesting = false;
     vector<string> deck1;
     vector<string> deck2;
@@ -74,13 +78,15 @@ int main(int argc, char* argv[]) {
     
     try {
         while (true) {
-            //if (p1.isLost()||p2.isLost()) {
-            //    if (p1.isLost()) {
-            //        cout << "p1 won" << endl;
-            //    } else {
-            //        cout << "p2 won" << endl;
-            //    }
-            //}
+            if (p1.isLost()||p2.isLost()) {
+                if (p1.isLost()) {
+                    cout << "p1 won" << endl;
+                    break;
+                } else {
+                    cout << "p2 won" << endl;
+                    break;
+                }
+            }
             if (!( inpt >> cmd )) {
                 cin >> cmd;
             }
@@ -89,7 +95,12 @@ int main(int argc, char* argv[]) {
                 cout << "help" << endl;
             }
             else if (cmd == "end") { //end turn
-                cout << "end" << endl;
+                cout << "turn end" << endl;
+                turnno += 1;
+                Player* temp = activeP;
+                activeP = otherP;
+                otherP = temp;
+                activeP->draw(1);
             }
             else if (cmd == "quit") { //ends the game
                 cout << "quit" << endl;
@@ -97,31 +108,76 @@ int main(int argc, char* argv[]) {
             }
             else if ((cmd == "draw")&&(isTesting)) { //draw a card
                 cout << "draw" << endl;
+                activeP->draw(1);
             }
             else if ((cmd == "discard")&&(isTesting)) { //discard a hand card
                 cout << "discard" << endl;
+                if (!(inpt>>num)) cin >> num;
+                activeP->discard(num);
             }
             else if (cmd == "attack") { //minion attack
                 cout << "attack" << endl;
+                if (!(inpt>>num)) cin >> num;
+                if (!(inpt>>num2)) {
+                    if (cin >> num2) {
+                        activeP->attack(num, num2);
+                    } else {
+                        auto temp = (activeP->getBoard(num))->getATK();
+                        otherP->LifeModify(-temp);
+                        (activeP->getBoard(num))->ModifyAct(-1);
+                    }
+                } else {
+                    activeP->attack(num);
+                }
             }
+            
             else if (cmd == "play") { //play a card
                 if (isTesting) {
                     cout << "dopePlay" << endl;
+                    activeP->CurMagicSet(100);
+                    if (!(inpt>>num)) cin >> num;
+                    if (!(inpt>>num2)) {
+                        if (cin >> num2) {
+                            activeP->play(num, otherP->getBoard(num2));
+                        } else if ((cin >> aux)&&(aux == "r")) {
+                            activeP->play(num, otherP->getBoard(5));
+                        } else {
+                            activeP->play(num);
+                        }
+                    } else {
+                        activeP->play(num, otherP->getBoard(num2));
+                    }
+                    activeP->CurMagicSet(0);
                 } else {
                     cout << "play" << endl;
+                    if (!(inpt>>num)) cin >> num;
+                    if (!(inpt>>num2)) {
+                        if (cin >> num2) {
+                            activeP->play(num, otherP->getBoard(num2));
+                        } else if ((cin >> aux)&&(aux == "r")) {
+                            activeP->play(num, otherP->getBoard(5));
+                        } else {
+                            activeP->play(num);
+                        }
+                    } else {
+                        activeP->play(num, otherP->getBoard(num2));
+                    }
                 }
             }
             else if (cmd == "use") { //minion ability
                 cout << "use" << endl;
             }
-            else if (cmd == "describe") { //description of a card
-                cout << "describe" << endl;
+            else if (cmd == "inspect") { //description of a card
+                cout << "inspect" << endl;
             }
             else if (cmd == "hand") { // show hand
                 cout << "hand" << endl;
             }
             else if (cmd == "board") { //show board
                 cout << "board" << endl;
+            }
+            else {
+                cout << "invalid command" << endl;
             }
         }
     }

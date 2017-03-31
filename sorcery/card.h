@@ -5,6 +5,8 @@
 #include <string>
 
 class Card {
+	Player *owner;
+	Player *opp;
     int cost;
     std::string name;
 public:

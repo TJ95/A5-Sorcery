@@ -2,12 +2,13 @@
 
 Minion::~Minion() {}
 
-void Minion::attack(Player P) {
-    P.LifeModify(-attack);
+void Minion::attack(Player *P) {
+	int attk = getAttack();
+    P->LifeModify(-attk);
 }
 
-void Minion::attack(Minion* m) {
-    m->modifySTAT (0, -attack);
+void Minion::attack(shared_ptr<Minion> m) {
+    m->modifySTAT (0, -getAttack());
     this->modifySTAT(0,-(m->getAttack());
 }
 
@@ -25,6 +26,11 @@ int Minion::getDEF() {
 
 int Minion::setDEF(int def) {
     defence = def;
+    maxDef = def;
+}
+
+int getMaxDef(){
+	return maxDef;
 }
 
 int Minion::setATK(int attk) {
@@ -32,10 +38,17 @@ int Minion::setATK(int attk) {
 }
 
 void Minion::modifySTAT(int a, int d) {
-    attack += a;
-    defence += d;
+    attack += (defence+d>getATK())? maxDef: defence+d;
+    defence = (defence+d>getMaxDef())? maxDef: defence+d;
 }
 
-CardType getType(){
+void Minion::setActions(int a ){
+	actions = a;
+}
+
+int Minion::getActions(){
+	return actions;
+}
+CardType Minion::getType(){
 	return CardType::Minion;
 }

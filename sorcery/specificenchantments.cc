@@ -1,6 +1,7 @@
 #include "enchantment.h"
 #include "card.h"
 #include "player.h"
+
 class GiantStrength: public Enchantment{
 
 	public:
@@ -30,7 +31,7 @@ public:
 
 class Silence:public Enchantment{
 public:
-	void useActiveAbility(shared_ptr<Card> c) override;
+	void useActiveAbility(std::shared_ptr<Card> c) override;
 
 };
 
@@ -70,7 +71,7 @@ namespace Card::Minion::Enchantment{
 	int MagicFatigue::getAbilityCost(){
 		return m->getAbilityCost()+2;
 	}
-	void Silence::useActiveAbility(shared_ptr<Card> c){
+	void Silence::useActiveAbility(std::shared_ptr<Card> c){
 		std::cout<<"this minion cant use abilities"<<std::endl;
 	}
 

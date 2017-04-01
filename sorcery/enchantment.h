@@ -11,14 +11,14 @@ class Enchantment: public Minion{
 	void attack(Player *P) override;
     void attack(std::shared_ptr<Minion> m) override;
     virtual void die(Player *P);
-    virtual double getAttack();
-    virtual double getDEF();
-    int getMaxDef();
-    virtual int getActions();
-    virtual void useActiveAbility(std::shared_ptr<Card> c);
-    virtual void setActions(int act);
+    virtual double getAttack() override;
+    virtual double getDEF() override;
+    int getMaxDef() override;
+    virtual int getActions() override;
+    virtual void useActiveAbility(std::shared_ptr<Card> c) override;
     void setATK(int a) override;
     void setDEF(int d) override;
+    virtual void modifySTAT(double a, double d) override;
     CardType getType() override;
 };
 #endif

@@ -19,6 +19,9 @@ void Enchantment::setATK(int attk){
 void Enchantment::setDEF(int attk){
 	m->setATK(attk);
 }
+int Enchantment::getAttack(){
+	return m->getAttack();
+}
 int Enchantment::getActions(){
 	return m->getActions();
 }

@@ -16,15 +16,15 @@ void Minion::die(Player P) {
     P.bury();
 }
 
-int Minion::getATK() {
+double Minion::getATK() {
     return attack;
 }
 
-int Minion::getDEF() {
+double Minion::getDEF() {
     return defence;
 }
 
-int Minion::setDEF(int def) {
+void Minion::setDEF(int def) {
     defence = def;
     maxDef = def;
 }
@@ -33,12 +33,12 @@ int getMaxDef(){
 	return maxDef;
 }
 
-int Minion::setATK(int attk) {
+void Minion::setATK(int attk) {
     attack = attk;
 }
 
-void Minion::modifySTAT(int a, int d) {
-    attack += (defence+d>getATK())? maxDef: defence+d;
+void Minion::modifySTAT(double a, double d) {
+    attack += a;
     defence = (defence+d>getMaxDef())? maxDef: defence+d;
 }
 
@@ -49,6 +49,11 @@ void Minion::setActions(int a ){
 int Minion::getActions(){
 	return actions;
 }
+
+int Minion::getAbilityCost(){
+	return abilityCost;
+}
+
 CardType Minion::getType(){
 	return CardType::Minion;
 }

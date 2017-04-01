@@ -15,6 +15,7 @@ class Enchantment: Public Minion{
     virtual int getDEF();
     virtual int getMaxDef();
     virtual int getActions();
+    virtual void useActiveAbility(shared_ptr<Card> c);
     virtual void setActions(int act);
     void setATK(int a) override;
     void setDEF(int d) override;

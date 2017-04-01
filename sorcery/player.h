@@ -5,9 +5,9 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include "subject.hpp"
-#include "observer.hpp"
-#include "TextDisplay.cpp"
+#include "subject.h"
+#include "observer.h"
+#include "textdisplay.h"
 
 class Card;
 

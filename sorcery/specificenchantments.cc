@@ -1,19 +1,20 @@
 #include "enchantment.h"
 #include "card.h"
+#include "player.h"
 class GiantStrength: public Enchantment{
 
 	public:
-    int getATK()override;
-    int getDEF()override;
+    double getAttack()override;
+    double getDEF()override;
     int getMaxDef()override;
 
 };
 
 class Enrage:public Enchantment{
 public:
-	int getDEF() override;
-	int getATK() override;
-	int getMaxDef() override;
+	double getDEF() override;
+	double getAttack() override;
+	double getMaxDef() override;
 	void modifySTAT(int d, int a) override;
 };
 class Haste: public Enchantment{
@@ -34,31 +35,31 @@ public:
 };
 
 namespace Card::Minion::Enchantment{
-	int GiantStrength::getATK(){
-		return m->getATK+2;
+	double GiantStrength::getAttack(){
+		return m->getAttack()+2;
 	}
 
-	int GiantStrength::getDEF(){
-		return m->getDEF+2;
+	double GiantStrength::getDEF(){
+		return m->getDEF()+2;
 	}
 
 	int GiantStrength::getMaxDef(){
-		return m->getMaxDef+2;
+		return m->getMaxDef()+2;
 	}
 
 	int Haste::getActions(){
-		return m->getActions+1;
+		return m->getActions()+1;
 	}
 
 	double Enrage::getDEF(){
 		return m->getDEF()*2;
 	}
 
-	double Enrage::getATK(){
-		return m->getATK()*2;
+	double Enrage::getAttack(){
+		return m->getAttack()*2;
 	}
 
-	double Enrage::getMaxDef(){
+	int Enrage::getMaxDef(){
 		return m->getMaxDef()*2;
 	}
 

@@ -1,4 +1,4 @@
-#include "minion.hpp"
+#include "minion.h"
 
 Minion::~Minion() {}
 
@@ -16,7 +16,7 @@ void Minion::die(Player P) {
     P.bury();
 }
 
-double Minion::getATK() {
+double Minion::getAttack() {
     return attack;
 }
 

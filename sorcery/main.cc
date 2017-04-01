@@ -23,8 +23,7 @@ vector<string> deck_loader(string deckname) {
 int main(int argc, char* argv[]) {
     cin.exceptions(ios::eofbit|ios::failbit);
     string cmd, aux;
-    int num;
-    int num2;
+    int num, num2, num3;
     Player p1;
     Player p2;
     Player* activeP = &p1;
@@ -97,9 +96,7 @@ int main(int argc, char* argv[]) {
             else if (cmd == "end") { //end turn
                 cout << "turn end" << endl;
                 turnno += 1;
-                Player* temp = activeP;
-                activeP = otherP;
-                otherP = temp;
+                swap(activeP, otherP);
                 activeP->draw(1);
             }
             else if (cmd == "quit") { //ends the game
@@ -120,49 +117,41 @@ int main(int argc, char* argv[]) {
                 if (!(inpt>>num)) cin >> num;
                 if (!(inpt>>num2)) {
                     if (cin >> num2) {
-                        activeP->attack(num, num2);
+                        activeP->attack(num, num2, otherP);
                     } else {
                         auto temp = (activeP->getBoard(num))->getATK();
                         otherP->LifeModify(-temp);
-                        (activeP->getBoard(num))->ModifyAct(-1);
+                        (activeP->getBoard(num))->modifyAct(-1);
                     }
                 } else {
-                    activeP->attack(num);
+                    activeP->attack(num, num2, otherP);
                 }
             }
             
             else if (cmd == "play") { //play a card
-                if (isTesting) {
-                    cout << "dopePlay" << endl;
-                    activeP->CurMagicSet(100);
-                    if (!(inpt>>num)) cin >> num;
-                    if (!(inpt>>num2)) {
-                        if (cin >> num2) {
-                            activeP->play(num, otherP->getBoard(num2));
-                        } else if ((cin >> aux)&&(aux == "r")) {
-                            activeP->play(num, otherP->getBoard(5));
+                if (isTesting) activeP->CurMagicSet(100);
+                if (!(inpt>>num)) {
+                    cin >> num;
+                    if (cin>>num2) {
+                        Player* pp = (num2 == 1)? nullptr:otherP;
+                        if ((cin>>aux)&&(aux == "r")) {
+                            activeP->play(num, 6, pp);
                         } else {
-                            activeP->play(num);
+                            cin >> num3;
+                            activeP->play(num, num3, pp);
                         }
-                    } else {
-                        activeP->play(num, otherP->getBoard(num2));
                     }
-                    activeP->CurMagicSet(0);
                 } else {
-                    cout << "play" << endl;
-                    if (!(inpt>>num)) cin >> num;
-                    if (!(inpt>>num2)) {
-                        if (cin >> num2) {
-                            activeP->play(num, otherP->getBoard(num2));
-                        } else if ((cin >> aux)&&(aux == "r")) {
-                            activeP->play(num, otherP->getBoard(5));
-                        } else {
-                            activeP->play(num);
-                        }
+                    inpt >> num2;
+                    Player* pp = (num2 == 1)? nullptr:otherP;
+                    if ((inpt>>aux)&&(aux == "r")) {
+                        activeP->play(num, 6, pp);
                     } else {
-                        activeP->play(num, otherP->getBoard(num2));
+                        inpt >> num3;
+                        activeP->play(num, num3, pp);
                     }
                 }
+                if (isTesting) activeP->CurMagicSet(0);
             }
             else if (cmd == "use") { //minion ability
                 cout << "use" << endl;

@@ -80,18 +80,25 @@ void Player::play(int card, int targ, Player* p) {
                     }
                 }
             } else if (temp->getType() == Ritual) { //ritual
-                if (!Board[5]) {
-                    Graveyard.emplace_back(Board[5]);
-                    Board.erase(Board.begin() + 5);
+                if (!shrine) {
+                    Graveyard.emplace_back(shrine);
                 }
                 CurMagicModify(-(temp->getCost()));
-                Board[5] = temp;
+                shrine = temp;
                 Hand.erase(Hand.begin() + card - 1);
             }
         } else if ((targ == -1)&&p) {
             temp->castSpell(this, p); //aoe spell
+            CurMagicModify(-(temp->getCost()));
+            Graveyard.emplace_back(temp);
+            Hand.erase(Hand.begin() + card - 1);
+            
         } else {
             temp->castSpell(p, targ); //spell w target
+            CurMagicModify(-(temp->getCost()));
+            Graveyard.emplace_back(temp);
+            Hand.erase(Hand.begin() + card - 1);
+            
         }
     } else {
         cout << "not enough mana!" << endl;
@@ -99,7 +106,17 @@ void Player::play(int card, int targ, Player* p) {
 }
 
 shared_ptr<Card> Player::getBoard (int slot) {
-    return Board[slot];
+    if (slot != 6) {
+        return Board[slot - 1];
+    } else {
+        return shrine;
+    }
+}
+
+int Player::getPop() {
+    int return_val = Board.size();
+    if (Board[5]) return_val -= 1;
+    return return_val;
 }
 
 void Player::draw(int time) {

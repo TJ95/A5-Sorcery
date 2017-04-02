@@ -10,7 +10,6 @@ class Enchantment: public Minion{
 	Enchantment(std::shared_ptr<Minion> m);
 	void attack(Player *P) override;
     void attack(std::shared_ptr<Minion> m) override;
-    virtual void die(Player *P);
     virtual double getAttack() override;
     virtual double getDEF() override;
     int getMaxDef() override;

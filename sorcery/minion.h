@@ -23,7 +23,6 @@ public:
     virtual ~Minion() = 0;
     virtual void attack(Player *P);
     virtual void attack(std::shared_ptr<Minion> m);
-    virtual void die();
     virtual void setActions(int act);
     virtual int getActions();
     virtual double getAttack();
@@ -34,7 +33,7 @@ public:
     virtual void setDEF(int d); // this changes max def
     virtual void modifySTAT(double a, double d); // this adds def up to its max
     virtual CardType getType();
-    virtual void useActiveAbility(std::shared_ptr<Minion> c,int i);
+    virtual void useActiveAbility(int i,std::shared_ptr<Minion> c=nullptr);
     virtual void useTriggerAbility(std::shared_ptr<Minion> c,std::string trigger);
     virtual void useTriggerAbility(std::string trigger);
     virtual std::map<std::string,std::vector<Ability>> getTriggerDesc();

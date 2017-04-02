@@ -29,6 +29,24 @@ class PotionSeller: public Minion{
 		PotionSeller(Player *owner, Player *opp);
 };
 
+class NovicePyromancer: public Minion{
+	initAbilities();
+	public:
+		NovicePyromancer(Player *owner, Player *opp);
+};
+
+class ApprenticeSummoner: public Minion{
+	initAbilities();
+	public:
+		ApprenticeSummoner(Player *owner, Player *opp);
+};
+
+class MasterSummoner: public Minion{
+	initAbilities();
+	public:
+		MasterSummoner(Player *owner, Player *opp);
+};
+
 	AirElemental::AirElemental(Player *owner, Player *opp):Minion(owner,opp){
 		this->owner=owner;
 	    this->opp=sp;
@@ -37,7 +55,7 @@ class PotionSeller: public Minion{
 		maxDefence=1;
 		name="Air Elemental";
 		cost = 0;
-}
+	}
 
 	EarthElemental::EarthElemental(Player *owner, Player *opp):Minion(owner,opp){
 	this->owner=owner;
@@ -47,7 +65,7 @@ class PotionSeller: public Minion{
 		maxDefence=4;
 		name="Earth Elemental";
 		cost = 3;
-}
+	}
 	BoneGolem::BoneGolem(Player *owner, Player *opp):Minion(owner,opp){
 	this->owner=owner;
 	    this->opp=sp;
@@ -59,11 +77,13 @@ class PotionSeller: public Minion{
 		initAbilities();
 		
 	}
+
 	void BoneGolem::initAbilities(){
 		GainStat g(owner,"Gain +1/+1 whenever a Minion leaves play.",1,1,0,this);
 		std::vector<Ability> trig = {g};
-		trigAb[M_out]=v;
+		trigAb[M_out]=trig;
 	}
+
 	FireElemental::FireElemental(Player *owner, Player *opp):Minion(owner,opp){
 		this->owner=owner;
 	    this->opp=sp;
@@ -75,26 +95,75 @@ class PotionSeller: public Minion{
 		initAbilities();
 		
 	}
+
 	void FireElemental::initAbilities(){
 		SingleDamage sd("Whenever an opponent's minion enters play, deal 1 damage to it.",1,0);
 		std::vector<Ability> trig = {sd};
-		trigAb[M_in]=v;
+		trigAb[M_in]=trig;
 	}
+
 	PotionSeller::PotionSeller(Player *owner, Player *opp):Minion(owner,opp){
 		this->owner=owner;
 	    this->opp=sp;
 		attk=2;
 		defence=2;
 		maxDefence=2;
-		name="Fire Elemental";
+		name="Potion Seller";
 		cost = 2;
 		initAbilities();
 		
 	}
-	void PotionSeller::PotionSeller(){
-		SingleDamage sd("Whenever an opponent's minion enters play, deal 1 damage to it.",1,0);
-		std::vector<Ability> trig = {sd};
-		trigAb[M_in]=v;
+
+	void PotionSeller::initAbilities(){
+		AoEHealing ah(owner,"At the end of your turn, all your minions gain +0/+1",1,0);
+		std::vector<Ability> trig = {ah};
+		trigAb[EoT]=trig;
 	}
 
+	NovicePyromancer::NovicePyromancer(Player *owner, Player *opp):Minion(owner,opp){
+		this->owner=owner;
+	    this->opp=sp;
+		attk=0;
+		defence=1;
+		maxDefence=1;
+		name="Novice Pyromancer";
+		cost = 1;
+		initAbilities();
+	}
 
+	void NovicePyromancer::initAbilities(){
+		SingleDamage sd("Deal 1 damage to target minion.",1,1);
+		actAb = {sd};
+	}
+ApprenticeSummoner::ApprenticeSummoner(Player *owner, Player *opp):Minion(owner,opp){
+		this->owner=owner;
+	    this->opp=sp;
+		attk=1;
+		defence=1;
+		maxDefence=1;
+		name="Apprentice Summoner";
+		cost = 1;
+		initAbilities();
+	}
+
+	void ApprenticeSummoner::initAbilities(){
+		std::shared+ptr<Minion>ae = std::make_shared<Minion>(new AirElemental(owner,opp));
+		Summon s("Summon a 1/1 air elemental.",ae,1);
+		actAb = {s};
+	}
+MasterSummoner::MasterSummoner(Player *owner, Player *opp):Minion(owner,opp){
+		this->owner=owner;
+	    this->opp=sp;
+		attk=2;
+		defence=3;
+		maxDefence=3;
+		name="Master Summoner";
+		cost = 3;
+		initAbilities();
+	}
+
+	void MasterSummoner::initAbilities(){
+		std::shared+ptr<Minion>ae = std::make_shared<Minion>(new AirElemental(owner,opp));
+		Summon s("Summon up to 3 1/1 air elementals.",ae,3);
+		actAb = {s};
+	}

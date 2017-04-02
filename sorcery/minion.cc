@@ -18,10 +18,6 @@ void Minion::attack(shared_ptr<Minion> m) {
     this->modifySTAT(0,-(m->getAttack()));
 }
 
-void Minion::die() {
-    owner->bury();
-}
-
 double Minion::getAttack() {
     return attk;
 }
@@ -64,21 +60,24 @@ CardType Minion::getType(){
 	return CardType::Minion;
 }
 
- void Minion::useActiveAbility(std::shared_ptr<Card> c,int i){
+ void Minion::useActiveAbility(int i,std::shared_ptr<Minion> c){
  	actAb[i].cast(c);
  }
- void Minion::useTriggerAbility(std::shared_ptr<Card> c,string trigger){
+
+ void Minion::useTriggerAbility(std::shared_ptr<Minion> c,string trigger){
  	std::vector<Ability> v = trigAb.find(trigger)->second;
  	for(Ability a:v ){
  		v.cast(c);
  	}
  }
+
  void Minion::useTriggerAbility(std::string trigger){
  	std::vector<Ability> v = trigAb.find(trigger)->second;
  	for(Ability a:v ){
  		v.cast(nullptr);
  	}
  }
+
 std::map<string,std::vector<Ability>> Minion::getTrigger(){
 	return trigAb;
 }

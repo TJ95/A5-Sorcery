@@ -67,7 +67,7 @@ class Summon: public Ability{
 		this->attk=attk;
 		this->cost=cost;
 	}
-	void AoE::cast(std::shared_ptr<Minion> mi){
+	void AoE::cast(std::shared_ptr<Minion> mi =nullptr){
 		if(opp!=nullptr){
 			int pop = opp->getPop();
 			for(int i = 0; i <pop;i++){
@@ -90,7 +90,7 @@ class Summon: public Ability{
 		this->gain=gain;
 		this->cost=cost;
 	}
-	void AoEHealing::cast(std::shared_ptr<Minion> mi){
+	void AoEHealing::cast(std::shared_ptr<Minion> mi= nullptr){
 		int pop = owner->getPop();
 		for(int i = 0; i <pop;i++){
 			auto m = owner->getBoard(i);
@@ -115,7 +115,7 @@ class Summon: public Ability{
 		this->num=num;
 	}
 
-	void Summon::cast(std::shared_ptr<Minion> mi){
+	void Summon::cast(std::shared_ptr<Minion> mi =nullptr){
 		for(int i = 0; i <num i++){
 			std::shared_ptr<Minion> o = std::make_shared<Event>(*m);
 			owner->altSummon(o);

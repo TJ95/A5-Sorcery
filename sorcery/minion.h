@@ -6,8 +6,9 @@
 #include "card.h"
 #include "cardtype.h"
 #include "ability.h"
+#include "player.h"
 #include <memory>
-class Player;
+
 class Minion: public Card {
 protected:
     double attk = 0;

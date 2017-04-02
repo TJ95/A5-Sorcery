@@ -4,9 +4,9 @@
 
 class GiantStrength: public Enchantment{
 protected:
-void init();
+void init() override;
 	public:
-	GiantStrength(){init();};
+    GiantStrength(Player *owner, Player *opp):Enchantment(owner,opp){init();};
     double getAttack()override;
     double getDEF()override;
     int getMaxDef()override;
@@ -15,38 +15,38 @@ void init();
 
 class Enrage:public Enchantment{
 	protected:
-void init();
+void init() override;
 public:
-	Enrage(){init();};
+	Enrage(Player *owner, Player *opp):Enchantment(owner,opp){init();};
 	double getDEF() override;
 	double getAttack() override;
-	double getMaxDef() override;
-	void modifySTAT(int d, int a) override;
+	int getMaxDef() override;
+	void modifySTAT(double d, double a) override;
 };
 
 class Haste: public Enchantment{
 	protected:
-void init();
+void init() override;
 public:
-	Haste(){init();};
+	Haste(Player *owner, Player *opp):Enchantment(owner,opp){init();};
 	int getActions() override;
 
 };
 
 class MagicFatigue:public Enchantment{
 	protected:
-void init();
+void init() override;
 public:
-	MagicFatigue(){init();};
+	MagicFatigue(Player *owner, Player *opp):Enchantment(owner,opp){init();};
 	int getAC(int i) override;
 };
 
 class Silence:public Enchantment{
 	protected:
-void init();
+void init() override;
 public:
-	Silence(){init();}
-	void useActiveAbility(std::shared_ptr<Minion> mi) override;
+	Silence(Player *owner, Player *opp):Enchantment(owner,opp){init();}
+	void useActiveAbility(int i, std::shared_ptr<Minion> mi) override;
 
 };
 	double GiantStrength::getAttack(){
@@ -77,14 +77,14 @@ public:
 		return m->getMaxDef()*2;
 	}
 
-	void Enrage::modifySTAT(int d, int a){
+	void Enrage::modifySTAT(double d, double a){
 		m->modifySTAT(d/2,a/2);
 	}
 
-	int MagicFatigue::getAbilityCost(){
-		return m->getAbilityCost()+2;
+	int MagicFatigue::getAC(int i){
+		return m->getAC(i)+2;
 	}
-	void Silence::useActiveAbility(std::shared_ptr<Minion> c){
+	void Silence::useActiveAbility(int i,std::shared_ptr<Minion> c){
 		std::cout<<"this minion cant use abilities"<<std::endl;
 	}
 

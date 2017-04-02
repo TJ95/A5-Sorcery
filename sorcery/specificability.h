@@ -10,7 +10,7 @@ class GainStat: public Ability{
 	Minion *host;
 	public:
 		GainStat(Player *own,std::string desp,int DFgain, int ATTKgain,int cost,Minion *m);
-		void cast(std::shared_ptr<Minion> m);
+		void cast(std::shared_ptr<Minion> m) override ;
 		void cast();
 };
 
@@ -18,21 +18,21 @@ class AoE: public Ability{
 	int attk;
 	public:
 		AoE(Player *own, Player *opp,std::string desp,int cost,int attk);
-		void cast(std::shared_ptr<Minion> m);
+		void cast(std::shared_ptr<Minion> m)override ;
 };
 
 class AoEHealing: public Ability{
 	int gain;
 	public:
 		AoEHealing(Player *own,std::string desp,int gain,int cost);
-		void cast(std::shared_ptr<Minion> m);
+		void cast(std::shared_ptr<Minion> m)override ;
 };
 
 class SingleDamage: public Ability{
 	int attk;
 	public:
 		SingleDamage(std::string desp,int attk,int cost);
-		void cast(std::shared_ptr<Minion> *m);
+		void cast(std::shared_ptr<Minion> m)override ;
 };
 
 class Summon: public Ability{
@@ -40,7 +40,7 @@ class Summon: public Ability{
 	int num;
 	public:
 		Summon(Player* p,std::string desp, std::shared_ptr<Minion> m,int num);
-		void cast(std::shared_ptr<Minion> m);
+		void cast(std::shared_ptr<Minion> m)override;
 };
 
 	GainStat::GainStat(Player *own,std::string desp,int DFgain, int ATTKgain,int cost,Minion *m){
@@ -78,7 +78,7 @@ class Summon: public Ability{
 		if(owner!=nullptr){
 			int pop = owner->getPop();
 			for(int i = 0; i <pop;i++){
-				auto m = own->getBoard(i);
+				auto m = owner->getBoard(i);
 				m->modifySTAT(0,-attk);
 			}
 		}
@@ -94,7 +94,7 @@ class Summon: public Ability{
 		int pop = owner->getPop();
 		for(int i = 0; i <pop;i++){
 			auto m = owner->getBoard(i);
-			m->modifyStat(gain,0);
+			m->modifySTAT(gain,0);
 		}
 	}
 
@@ -105,7 +105,7 @@ class Summon: public Ability{
 	}
 
 	void SingleDamage::cast(std::shared_ptr<Minion> m){
-		m->modifyStat(0,-attk);
+		m->modifySTAT(0,-attk);
 	}
 
 	Summon::Summon(Player *own,std::string desp, std::shared_ptr<Minion> m,int num){
@@ -116,8 +116,8 @@ class Summon: public Ability{
 	}
 
 	void Summon::cast(std::shared_ptr<Minion> mi =nullptr){
-		for(int i = 0; i <num i++){
-			std::shared_ptr<Minion> o = std::make_shared<Event>(*m);
+        for(int i = 0; i <num ; i++){
+			std::shared_ptr<Minion> o = std::make_shared<Minion>(*m);
 			owner->altSummon(o);
 		}		
 	}

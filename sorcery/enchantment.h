@@ -2,6 +2,8 @@
 #define _ENCHANTMENT_H_
 #include "minion.h"
 #include "cardtype.h"
+#include <memory>
+
 
 class Minion;
 class Enchantment: public Minion{
@@ -12,20 +14,20 @@ protected:
     std::string attkMod="";
     std::string defMod ="";
 	public:
-	Enchantment();
-    void setMinion(shared_ptr<Minion>m);
+	Enchantment(Player *owner, Player *opp);
+    void setMinion(std::shared_ptr<Minion>m);
 	void attack(Player *P) override;
-    void attack(std::shared_ptr<Minion> m);
-    virtual double getAttack();
-    virtual double getDEF();
+    void attack(std::shared_ptr<Minion> m) override;
+    virtual double getAttack() override;
+    virtual double getDEF() override;
     int getMaxDef() override;
-    virtual int getActions();
+    virtual int getActions() override;
     void setATK(int a) override;
     void setDEF(int d) override;
-    virtual void modifySTAT(double a, double d);
+    virtual void modifySTAT(double a, double d) override;
     CardType getType() override;
     void setActions(int act)override;
-    void int getAC()override;
+    int getAC(int i) override;
     void useActiveAbility(int i,std::shared_ptr<Minion> target=nullptr)override;
     void useTriggerAbility(std::shared_ptr<Minion> c,std::string trigger)override;
     void useTriggerAbility(std::string trigger) override;

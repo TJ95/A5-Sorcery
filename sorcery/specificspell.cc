@@ -111,6 +111,7 @@ void Blizzard::init(){
 }
 
 void Blizzard::cast(){
-	owner->rez(opp);
+	AoE a(owner,opp,"",0,2);
+	a.cast();
 }
 

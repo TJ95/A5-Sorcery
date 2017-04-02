@@ -1,7 +1,7 @@
 #include "enchantment.h"
 #include "cardtype.h"
 using namespace std;
-Enchantment::Enchantment(){
+Enchantment::Enchantment(Player *owner, Player *op):Minion(owner,op){
 	init();
 }
 void Enchantment::setMinion(std::shared_ptr<Minion> m){
@@ -21,7 +21,7 @@ void Enchantment::attack(std::shared_ptr<Minion> minion){
 	minion->modifySTAT(-attk,0);
 	m->modifySTAT(-minion->getAttack(),0);
 }
-void Enchantent::modifySTAT(double a, double d){
+void Enchantment::modifySTAT(double a, double d){
 	m->modifySTAT(a,d);
 }
 void Enchantment::setATK(int attk){
@@ -50,7 +50,7 @@ int Enchantment::getAC(int i){
 	return m->getAC(i);
 }
 
-void Enchantment::useActiveAbility(int i,std::shared_ptr<Minion> target=nullptr){
+void Enchantment::useActiveAbility(int i,std::shared_ptr<Minion> target){
 	m->useActiveAbility(i,target);
 }
 
@@ -81,6 +81,6 @@ std::string Enchantment::getDefMod(){
 	return defMod;
 }
 
-std::shared_ptr<Minion> getMinion(){
+std::shared_ptr<Minion> Enchantment::getMinion(){
 	return m;
 }

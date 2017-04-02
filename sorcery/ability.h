@@ -1,7 +1,9 @@
 #ifndef _ABILITY_H_
 #define _ABILITY_H_
 #include "cardtype.h"
-class Card;
+#include "card.h"
+#include <string>
+
 class Minion;
 class Ability:public Card{
 protected:
@@ -10,9 +12,9 @@ protected:
 public:
 	int getCost();
 	Ability();
-	std::string getDesc();
+	std::string getDesp();
 	CardType getType();
-	virtual void cast(Card *c);
+    virtual void cast(std::shared_ptr<Minion> m);
 
 };
 #endif

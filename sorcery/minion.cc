@@ -67,14 +67,14 @@ CardType Minion::getType(){
  void Minion::useTriggerAbility(std::shared_ptr<Minion> c,string trigger){
  	std::vector<Ability> v = trigAb.find(trigger)->second;
  	for(Ability a:v ){
- 		v.cast(c);
+ 		a.cast(c);
  	}
  }
 
  void Minion::useTriggerAbility(std::string trigger){
  	std::vector<Ability> v = trigAb.find(trigger)->second;
  	for(Ability a:v ){
- 		v.cast(nullptr);
+ 		a.cast(nullptr);
  	}
  }
 
@@ -82,6 +82,6 @@ std::map<string,std::vector<Ability>> Minion::getTrigger(){
 	return trigAb;
 }
 
-std::vector<Ability> getActive(){
+std::vector<Ability> Minion::getActive(){
 	return actAb;
 }

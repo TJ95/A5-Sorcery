@@ -2,7 +2,6 @@
 #define _CARD_H_
 #include "cardtype.h"
 
-
 #include <string>
 
 class Player;

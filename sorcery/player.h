@@ -22,12 +22,9 @@ class Player: public Observer, public Subject {
     std::shared_ptr<Ritual> shrine; //the ritual slot
     std::vector<std::shared_ptr<Card>> Hand; //the hand, with a maximum number of 5 cards
     std::vector<std::shared_ptr<Card>> Deck; //a default deck will be provided if no deck file
-    std::vector<std::shared_ptr<Minion>> Graveyard; //Graveyard will contain the Spell played,
-    //  out of charge Rituals
-    //  died Minions
-    std::vector<std::shared_ptr<Minion>> Board; //the board, where the Cards will be played
-    //  Board[0] ~ Board[4] are Minion slots
-public:
+    std::vector<std::shared_ptr<Minion>> Graveyard; //Graveyard will contain dead Minions
+    std::vector<std::shared_ptr<Minion>> Board; //the board, where the Minions will be played
+    public:
     Player(std::string name);
     void LifeModify(int n);
     void MagicModify(int n);

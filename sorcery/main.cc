@@ -6,7 +6,7 @@
 
 #include "player.h"
 #include "card.h"
-#include "specificminion.h"
+#include "specificminion.cc"
 
 using namespace std;
 
@@ -30,7 +30,7 @@ vector<Card*> deck_loader(string deckname, Player* owner, Player* opp) {
             auto cp = make_shared<Card> ( new PotionSeller(owner, opp) );
             return_deck.emplace_back(cp);
         } else if (temp == "Fire Elemental") {
-            auto cp = make_shared<Card> ( new FireElement(owner, opp) );
+            auto cp = make_shared<Card> ( new FireElemental(owner, opp) );
             return_deck.emplace_back(cp);
         } else if (temp == "Novice Pyromancer") {
             auto cp = make_shared<Card> ( new NovicePyromancer(owner, opp) );
@@ -198,6 +198,7 @@ int main(int argc, char* argv[]) {
                 activeP->discard(num);
             }
             else if (cmd == "attack") { //minion attack
+                int corps = activeP->Graveyard.size();
                 if (inpt>>num) {
                     if (inpt>>num2) {
                         activeP->getBoard(num - 1)->attack(otherP->getBoard(num - 1));
@@ -216,6 +217,12 @@ int main(int argc, char* argv[]) {
                         activeP->getBoard(num - 1)->attack(otherP);
                     }
                 }
+                if (activeP->Graveyard.size() > corps) {
+                    int j = activeP->Graveyard.size() - corps;
+                    for (int i =0; i < j; i++) {
+                        activeP->trigger(otherP, M_out, -1, 0);
+                    }
+                }
             }
             else if (cmd == "play") { //play a card
                 if (isTesting) activeP->CurMagicSet(100);
@@ -231,6 +238,8 @@ int main(int argc, char* argv[]) {
                         }
                     } else {
                         activeP->play(num, -1, nullptr);
+                        activeP->trigger(otherP, M_in, -1, 0);
+                        othePr->trigger(activeP, M_in, -1, 0);
                     }
                 } else {
                     inpt >> num2;
@@ -241,6 +250,8 @@ int main(int argc, char* argv[]) {
                         activeP->play(num, num3, pp);
                     } else {
                         activeP->play(num, -1, nullptr);
+                        activeP->trigger(otherP, M_in, -1, 0);
+                        otherP->trigger(activeP, M_in, -1, 0);
                     }
                 }
                 if (isTesting) activeP->CurMagicSet(0);

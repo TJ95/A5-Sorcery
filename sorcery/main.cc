@@ -2,80 +2,82 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <memory>
 
 #include "player.h"
 #include "card.h"
+#include "specificminion.h"
 
 using namespace std;
 
 //deck_loader loads from a .deck file and returns a vector containing
 //  the name of the cards in the deck
-vector<Card*> deck_loader(string deckname) {
+vector<Card*> deck_loader(string deckname, Player* owner, Player* opp) {
     vector<Card*> return_deck;
     string temp;
     ifstream ifs{deckname+".deck"};
     while (getline(ifs,temp)) {
         if (temp == "Air Element") {
-            auto cp = make_shared<Card> { new AirElement };
+            auto cp = make_shared<Card> ( new AirElemental(owner, opp) );
             return_deck.emplace_back(cp);
         } else if (temp == "Earth Element") {
-            auto cp = make_shared<Card> { new EarthElement };
+            auto cp = make_shared<Card> ( new EarthElemental(owner, opp) );
             return_deck.emplace_back(cp);
         } else if (temp == "Bone Golem") {
-            auto cp = make_shared<Card> { new BoneGolem };
+            auto cp = make_shared<Card> ( new BoneGolem(owner, opp) );
             return_deck.emplace_back(cp);
         } else if (temp == "Potion Seller") {
-            auto cp = make_shared<Card> { new PotionSeller };
+            auto cp = make_shared<Card> ( new PotionSeller(owner, opp) );
             return_deck.emplace_back(cp);
         } else if (temp == "Fire Elemental") {
-            auto cp = make_shared<Card> { new FireElement };
+            auto cp = make_shared<Card> ( new FireElement(owner, opp) );
             return_deck.emplace_back(cp);
         } else if (temp == "Novice Pyromancer") {
-            auto cp = make_shared<Card> { new NovicePyromancer };
+            auto cp = make_shared<Card> ( new NovicePyromancer(owner, opp) );
             return_deck.emplace_back(cp);
         } else if (temp == "Apprentice Summoner") {
-            auto cp = make_shared<Card> { new ApprenticeSummoner };
+            auto cp = make_shared<Card> ( new ApprenticeSummoner (owner, opp));
             return_deck.emplace_back(cp);
         } else if (temp == "Master Summoner") {
-            auto cp = make_shared<Card> { new MasterSummoner };
+            auto cp = make_shared<Card> ( new MasterSummoner(owner, opp) );
             return_deck.emplace_back(cp);
         } else if (temp == "Banish") {
-            auto cp = make_shared<Card> { new Banish };
+            auto cp = make_shared<Card> ( new Banish(owner, opp) );
             return_deck.emplace_back(cp);
         } else if (temp == "Unsummon") {
-            auto cp = make_shared<Card> { new Unsummon };
+            auto cp = make_shared<Card> ( new Unsummon(owner, opp) );
             return_deck.emplace_back(cp);
         } else if (temp == "Disenchant") {
-            auto cp = make_shared<Card> { new Disenchant };
+            auto cp = make_shared<Card> ( new Disenchant(owner, opp) );
             return_deck.emplace_back(cp);
         } else if (temp == "Raise Dead") {
-            auto cp = make_shared<Card> { new RaiseDead };
+            auto cp = make_shared<Card> ( new RaiseDead (owner, opp));
             return_deck.emplace_back(cp);
         } else if (temp == "Blizzard") {
-            auto cp = make_shared<Card> { new Blizzard };
+            auto cp = make_shared<Card> ( new Blizzard (owner, opp));
             return_deck.emplace_back(cp);
         } else if (temp == "Giant Strength") {
-            auto cp = make_shared<Card> { new GiantStrenth };
+            auto cp = make_shared<Card> ( new GiantStrenth (owner, opp));
             return_deck.emplace_back(cp);
         } else if (temp == "Enrage") {
-            auto cp = make_shared<Card> { new Enrage };
+            auto cp = make_shared<Card> ( new Enrage (owner, opp));
         } else if (temp == "Haste") {
-            auto cp = make_shared<Card> { new Haste };
+            auto cp = make_shared<Card> ( new Haste (owner, opp));
             return_deck.emplace_back(cp);
         } else if (temp == "Magic Fatigue") {
-            auto cp = make_shared<Card> { new MagicFatigue };
+            auto cp = make_shared<Card> ( new MagicFatigue (owner, opp));
             return_deck.emplace_back(cp);
         } else if (temp == "Silence") {
-            auto cp = make_shared<Card> { new Silence };
+            auto cp = make_shared<Card> ( new Silence (owner, opp));
             return_deck.emplace_back(cp);
         } else if (temp == "Dark Ritual") {
-            auto cp = make_shared<Card> { new DarkRitual };
+            auto cp = make_shared<Card> ( new DarkRitual (owner, opp));
             return_deck.emplace_back(cp);
         } else if (temp == "Aura of Power") {
-            auto cp = make_shared<Card> { new AuraofPower };
+            auto cp = make_shared<Card> ( new AuraofPower (owner, opp));
             return_deck.emplace_back(cp);
         } else if (temp == "Standstill") {
-            auto cp = make_shared<Card> { new Standstill };
+            auto cp = make_shared<Card> ( new Standstill (owner, opp));
             return_deck.emplace_back(cp);
         } else {
             cout << "There is no such card as" << temp << "!" << end;
@@ -89,9 +91,11 @@ int main(int argc, char* argv[]) {
     string cmd, aux;
     int num, num2, num3;
     Player p1("player1");
+    Player* pl1 = &p1;
     Player p2("player2");
-    Player* activeP = &p1;
-    Player* otherP = &p2;
+    Player* pl2 = &p2;
+    Player* activeP = pl1;
+    Player* otherP = pl2;
     
     int turnno = 0;
     bool isTesting = false;
@@ -108,12 +112,14 @@ int main(int argc, char* argv[]) {
                 cout << "testing mode actived"<<endl;
             }
             else if (s == "-deck1") {
-                deck1 = deck_loader(argv[i+1]);
+                deck1 = deck_loader(argv[i+1], pl1, pl2);
+                pl1->DeckSet(deck1);
                 i++;
                 cout << "deck1 loaded" << endl;
             }
             else if (s == "-deck2") {
-                deck1 = deck_loader(argv[i+1]);
+                deck1 = deck_loader(argv[i+1], pl2, pl1);
+                pl2->DeckSet(deck2);
                 i++;
                 cout << "deck2 loaded" << endl;
             }
@@ -129,11 +135,13 @@ int main(int argc, char* argv[]) {
     }
     
     //load the default deck for players if no deck is given
-    if (deck1.size() == 0) deck1 = deck_loader("default");
-    if (deck2.size() == 0) deck2 = deck_loader("default");
+    if (deck1.size() == 0) deck1 = deck_loader("default", pl1, pl2);
+    if (deck2.size() == 0) deck2 = deck_loader("default", pl2, pl1);
+    p1.DeckSet(deck1);
+    p2.DeckSet(deck2);
     
-    p1->DeckSet(deck1);
-    p2->DeckSet(deck2);
+    p1.draw(5);
+    p2.draw(5);
     
     try {
         while (true) {
@@ -162,14 +170,19 @@ int main(int argc, char* argv[]) {
                 cout << "           board -- Describe all cards on the board." << endl;
             }
             else if (cmd == "end") { //end turn
-                //EoT trigger
+                activeP->trigger(otherP, EoT, -1, 0);
+                activeP->bury();
+                otherP->bury();
                 turnno += 1;
+                //end of the active player's turn
                 swap(activeP, otherP);
-                
+                // start of the other player's turn
                 activeP->MagicModify(1);
                 activeP->CurMagicSet(1);
                 activeP->draw(1);
-                //SoT trigger
+                activeP->trigger(otherP, SoT, -1, 0);
+                activeP->bury();
+                otherP->bury();
             }
             else if (cmd == "quit") { //ends the game
                 cout << "bye! ;(" << endl;
@@ -188,6 +201,8 @@ int main(int argc, char* argv[]) {
                 if (inpt>>num) {
                     if (inpt>>num2) {
                         activeP->getBoard(num - 1)->attack(otherP->getBoard(num - 1));
+                        activeP->bury();
+                        otherP->bury();
                     } else {
                         activeP->getBoard(num - 1)->attack(otherP);
                     }
@@ -195,6 +210,8 @@ int main(int argc, char* argv[]) {
                     cin >> num;
                     if (cin>>num2) {
                         activeP->getBoard(num - 1)->attck(otherP->getBoard(num - 1));
+                        activeP->bury();
+                        otherP->bury();
                     } else {
                         activeP->getBoard(num - 1)->attack(otherP);
                     }
@@ -212,18 +229,23 @@ int main(int argc, char* argv[]) {
                             cin >> num3;
                             activeP->play(num, num3, pp);
                         }
+                    } else {
+                        activeP->play(num, -1, nullptr);
                     }
                 } else {
                     inpt >> num2;
                     Player* pp = (num2 == 1)? nullptr:otherP;
                     if ((inpt>>aux)&&(aux == "r")) {
                         activeP->play(num, 6, pp);
-                    } else {
-                        inpt >> num3;
+                    } else if (inpt >> num3){
                         activeP->play(num, num3, pp);
+                    } else {
+                        activeP->play(num, -1, nullptr);
                     }
                 }
                 if (isTesting) activeP->CurMagicSet(0);
+                activeP->bury();
+                otherP->bury();
             }
             else if (cmd == "use") { //minion ability
                 cout << "use" << endl;

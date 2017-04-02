@@ -9,6 +9,7 @@
 #include "observer.h"
 #include "textdisplay.h"
 #include "minion.h"
+#include "const.h"
 
 class Card;
 class Ritual;
@@ -35,16 +36,17 @@ public:
     void DeckSet(std::vector<std::shared_ptr<Card>> d);
     void play(int card); //plays a minion/ritual
     void play(int card, int targ, Player* p); //plays a targeted Spell/Enchant
-    void use(int m, int targ);
+    void use(int m, int targ, Player* p);
     std::shared_ptr<Minion> getBoard (int slot);
     int getPop();
     void altSummon(std::shared_ptr<Minion> m);
     void draw(int time); //draw adds the first element of Deck to Hand
     //  while removing that element from Deck
-    void trigger();
-    
+    void trigger(Player* p, std::string s, int targ, int owner);
     void discard(int i);
     void bury(); //bury looks for dead minion adds a Card to Graveyard
+    void buryR();
+    void takeback(int i);
     void attack(int i);
     void forfeit(); //forfeit sets the Player's life to 0
     void endTurn(); //endTurn passes the active Player's turn

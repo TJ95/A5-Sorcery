@@ -1,8 +1,8 @@
 #ifndef spell_hpp
 #define spell_hpp
 
-#include "card.hpp"
-#include "player.hpp"
+#include "card.h"
+#include "player.h"
 #include <vector>
 
 class Spell: public Card {

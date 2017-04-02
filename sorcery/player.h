@@ -24,7 +24,7 @@ class Player: public Observer, public Subject {
     std::vector<std::shared_ptr<Card>> Graveyard; //Graveyard will contain the Spell played,
     //  out of charge Rituals
     //  died Minions
-    std::vector<std::shared_ptr<Card>> Board; //the board, where the Cards will be played
+    std::vector<std::shared_ptr<Minion>> Board; //the board, where the Cards will be played
     //  Board[0] ~ Board[4] are Minion slots
 public:
     Player(std::string name);
@@ -35,8 +35,8 @@ public:
     void DeckSet(std::vector<std::shared_ptr<Card>> d);
     void play(int card); //plays a minion/ritual
     void play(int card, int targ, Player* p); //plays a targeted Spell/Enchant
-    
-    std::shared_ptr<Card> getBoard (int slot);
+    void use(int m, int targ);
+    std::shared_ptr<Minion> getBoard (int slot);
     int getPop();
     void altSummon(std::shared_ptr<Minion> m);
     void draw(int time); //draw adds the first element of Deck to Hand

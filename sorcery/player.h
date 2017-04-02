@@ -5,9 +5,10 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include "subject.h"
-#include "observer.h"
-#include "textdisplay.h"
+#include "subject.hpp"
+#include "observer.hpp"
+#include "textdisplay.hpp"
+#include "minion.hpp"
 
 class Card;
 
@@ -34,8 +35,11 @@ public:
     
     std::shared_ptr<Card> getBoard (int slot);
     int getPop();
+    void altSummon(std::shared_ptr<Minion> m);
     void draw(int time); //draw adds the first element of Deck to Hand
     //  while removing that element from Deck
+    void trigger();
+    
     void discard(int i);
     void bury(); //bury looks for dead minion adds a Card to Graveyard
     void attack(int i);

@@ -10,14 +10,14 @@ using namespace std;
 
 //deck_loader loads from a .deck file and returns a vector containing
 //  the name of the cards in the deck
-vector<string> deck_loader(string deckname) {
-    vector<string> return_vector;
+vector<Card> deck_loader(string deckname) {
+    vector<string> return_deck;
     string temp;
     ifstream ifs{deckname+".deck"};
     while (getline(ifs,temp)) {
         return_vector.emplace_back(temp);
     }
-    return return_vector;
+    return return_deck;
 }
 
 int main(int argc, char* argv[]) {
@@ -94,7 +94,8 @@ int main(int argc, char* argv[]) {
                 cout << "help" << endl;
             }
             else if (cmd == "end") { //end turn
-                cout << "turn end" << endl;
+                cout << "end of turn abilities triggered" << endl;
+                
                 turnno += 1;
                 swap(activeP, otherP);
                 activeP->draw(1);
@@ -113,21 +114,14 @@ int main(int argc, char* argv[]) {
                 activeP->discard(num);
             }
             else if (cmd == "attack") { //minion attack
-                cout << "attack" << endl;
-                if (!(inpt>>num)) cin >> num;
-                if (!(inpt>>num2)) {
-                    if (cin >> num2) {
-                        activeP->attack(num, num2, otherP);
+                if (inpt>>num) {
+                    if (inpt>>num2) {
+                        activeP->getBoard(num - 1)->attack(otherP->getBoard(num - 1));
                     } else {
-                        auto temp = (activeP->getBoard(num))->getATK();
-                        otherP->LifeModify(-temp);
-                        (activeP->getBoard(num))->modifyAct(-1);
+                        activeP->getBoard(num - 1)->attack(otherP);
                     }
-                } else {
-                    activeP->attack(num, num2, otherP);
                 }
             }
-            
             else if (cmd == "play") { //play a card
                 if (isTesting) activeP->CurMagicSet(100);
                 if (!(inpt>>num)) {

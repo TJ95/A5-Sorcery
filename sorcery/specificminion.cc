@@ -49,29 +49,29 @@ class MasterSummoner: public Minion{
 
 	AirElemental::AirElemental(Player *owner, Player *opp):Minion(owner,opp){
 		this->owner=owner;
-	    this->opp=sp;
+	    this->opp=opp;
 		attk=1;
 		defence=1;
-		maxDefence=1;
+		maxDef=1;
 		name="Air Elemental";
 		cost = 0;
 	}
 
 	EarthElemental::EarthElemental(Player *owner, Player *opp):Minion(owner,opp){
 	this->owner=owner;
-	    this->opp=sp;
+	    this->opp=opp;
 		attk=4;
 		defence=4;
-		maxDefence=4;
+		maxDef=4;
 		name="Earth Elemental";
 		cost = 3;
 	}
 	BoneGolem::BoneGolem(Player *owner, Player *opp):Minion(owner,opp){
 	this->owner=owner;
-	    this->opp=sp;
+	    this->opp=opp;
 		attk=1;
 		defence=3;
-		maxDefence=3;
+		maxDef=3;
 		name="Bone Golem";
 		cost = 2;
 		initAbilities();
@@ -86,10 +86,10 @@ class MasterSummoner: public Minion{
 
 	FireElemental::FireElemental(Player *owner, Player *opp):Minion(owner,opp){
 		this->owner=owner;
-	    this->opp=sp;
+	    this->opp=opp;
 		attk=2;
 		defence=2;
-		maxDefence=2;
+		maxDef=2;
 		name="Fire Elemental";
 		cost = 2;
 		initAbilities();
@@ -104,10 +104,10 @@ class MasterSummoner: public Minion{
 
 	PotionSeller::PotionSeller(Player *owner, Player *opp):Minion(owner,opp){
 		this->owner=owner;
-	    this->opp=sp;
+	    this->opp=opp;
 		attk=2;
 		defence=2;
-		maxDefence=2;
+		maxDef=2;
 		name="Potion Seller";
 		cost = 2;
 		initAbilities();
@@ -122,10 +122,10 @@ class MasterSummoner: public Minion{
 
 	NovicePyromancer::NovicePyromancer(Player *owner, Player *opp):Minion(owner,opp){
 		this->owner=owner;
-	    this->opp=sp;
+	    this->opp=opp;
 		attk=0;
 		defence=1;
-		maxDefence=1;
+		maxDef=1;
 		name="Novice Pyromancer";
 		cost = 1;
 		initAbilities();
@@ -137,33 +137,33 @@ class MasterSummoner: public Minion{
 	}
 ApprenticeSummoner::ApprenticeSummoner(Player *owner, Player *opp):Minion(owner,opp){
 		this->owner=owner;
-	    this->opp=sp;
+	    this->opp=opp;
 		attk=1;
 		defence=1;
-		maxDefence=1;
+		maxDef=1;
 		name="Apprentice Summoner";
 		cost = 1;
 		initAbilities();
 	}
 
 	void ApprenticeSummoner::initAbilities(){
-		std::shared+ptr<Minion>ae = std::make_shared<Minion>(new AirElemental(owner,opp));
-		Summon s("Summon a 1/1 air elemental.",ae,1);
+		std::shared_ptr<Minion>ae = std::make_shared<Minion>(new AirElemental(owner,opp));
+		Summon s(owner, "Summon a 1/1 air elemental.",ae,1);
 		actAb = {s};
 	}
 MasterSummoner::MasterSummoner(Player *owner, Player *opp):Minion(owner,opp){
 		this->owner=owner;
-	    this->opp=sp;
+	    this->opp=opp;
 		attk=2;
 		defence=3;
-		maxDefence=3;
+		maxDef=3;
 		name="Master Summoner";
 		cost = 3;
 		initAbilities();
 	}
 
 	void MasterSummoner::initAbilities(){
-		std::shared+ptr<Minion>ae = std::make_shared<Minion>(new AirElemental(owner,opp));
-		Summon s("Summon up to 3 1/1 air elementals.",ae,3);
+		std::shared_ptr<Minion>ae = std::make_shared<Minion>(new AirElemental(owner,opp));
+		Summon s(owner, "Summon up to 3 1/1 air elementals.",ae,3);
 		actAb = {s};
 	}

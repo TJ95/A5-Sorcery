@@ -10,7 +10,11 @@
 
 using namespace std;
 class Ritual;
-//Player(std::string deckname); //ctor for Player
+
+Player::Player(string name)
+: name{name}, life{20}, magic{3}, current_magic{3}, shrine{nullptr},
+Hand{vector<shared_ptr<Card>>(5,nullptr)}, Board{vector<shared_ptr<Card>>(5, nullptr)},
+Deck{vector<shared_ptr<Card>>(0, nullptr)}, Graveyard{vector<shared_ptr<Card>>(0,nullptr)} {}
 
 void Player::LifeModify(int n) {
     life += n;
@@ -26,6 +30,10 @@ void Player::CurMagicModify(int n) {
 
 void Player::CurMagicSet(int n) {
     current_magic = n;
+}
+
+void Player::DeckSet(vector<shared_ptr<Card>> d) {
+    Deck = d;
 }
 
 //playing cards

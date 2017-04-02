@@ -1,9 +1,12 @@
 #include "card.h"
-
 using namespace std;
 
-Card::Card(int c, string n, string t)
-: cost{c}, name{n}, type{t} {}
+Card::Card(){
+
+}
+
+Card::Card(Player *owner, Player *opp)
+: owner{owner}, opp{opp}{}
 
 CardType Card::getType(){
 	return CardType::Card;

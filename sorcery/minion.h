@@ -7,16 +7,21 @@
 #include "cardtype.h"
 class Player;
 class Minion: public Card {
-    double attk;
-    double defence;
-    double maxDef;
-    int abilityCost;
-    int actions;
+protected:
+    double attk = 0;
+    double defence= 0;
+    int maxDef = 0;
+    int abilityCost = 0;
+    int actions = 0;
+    vector<Ability> trigAb;
+    vector<Ability> actAb;
+
 public:
+	Minion(Player *owner, Player *opp);
     virtual ~Minion() = 0;
     virtual void attack(Player *P);
     virtual void attack(std::shared_ptr<Minion> m);
-    virtual void die(Player *P);
+    virtual void die();
     virtual void setActions(int act);
     virtual int getActions();
     virtual double getAttack();
@@ -29,6 +34,9 @@ public:
     virtual CardType getType();
     virtual void useActiveAbility(std::shared_ptr<Card> c);
     virtual void useTriggerAbility(std::shared_ptr<Card> c);
+    virtual std::string getTriggerDesc();
+    virtual std::string getActiveDesc();
+
 };
 
 #endif /* minion_hpp */

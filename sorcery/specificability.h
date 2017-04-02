@@ -5,27 +5,32 @@
 
 class GainStat: public Ability{
 	public:
+		GainStat(std::string desp):Ability(desp){};
 		void cast(std::shared_ptr<Minion> *m,int DFgain, int ATTKgain);
 };
 
 class AoE: public Ability{
 	public:
+		AoE(std::string desp):Ability(desp){};
 		void cast(int attk);
 		
 };
 
 class AoEHealing: public Ability{
 	public:
+		AoEHealing(std::string desp):Ability(desp){};
 		void cast(int gain);
 };
 
 class SingleDamage: public Ability{
 	public:
+		SingleDamage(std::string desp):Ability(desp){};
 		void cast(std::shared_ptr<Minion> *m,int attk);
 };
 
 class Summon: public Ability{
 	public:
+		GainStat(std::string desp):Ability(desp){};
 		void cast(shared_ptr<Minion> m);
 };
 namespace Card::Ability{

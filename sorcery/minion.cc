@@ -1,23 +1,29 @@
 #include "minion.h"
+using namespace std;
 
 Minion::~Minion() {}
 
+Minion::Minion(Player *owner,Player *opp):Card(owner,opp){
+	this->owner=owner;
+	this->opp=opp;
+}
+
 void Minion::attack(Player *P) {
-	int attk = getAttack();
-    P->LifeModify(-attk);
+	int atk = getAttack();
+    P->LifeModify(-atk);
 }
 
 void Minion::attack(shared_ptr<Minion> m) {
     m->modifySTAT (0, -getAttack());
-    this->modifySTAT(0,-(m->getAttack());
+    this->modifySTAT(0,-(m->getAttack()));
 }
 
-void Minion::die(Player P) {
-    P.bury();
+void Minion::die() {
+    owner->bury();
 }
 
 double Minion::getAttack() {
-    return attack;
+    return attk;
 }
 
 double Minion::getDEF() {
@@ -29,16 +35,16 @@ void Minion::setDEF(int def) {
     maxDef = def;
 }
 
-int getMaxDef(){
+int Minion::getMaxDef(){
 	return maxDef;
 }
 
 void Minion::setATK(int attk) {
-    attack = attk;
+    attk = attk;
 }
 
 void Minion::modifySTAT(double a, double d) {
-    attack += a;
+    attk += a;
     defence = (defence+d>getMaxDef())? maxDef: defence+d;
 }
 
@@ -56,4 +62,15 @@ int Minion::getAbilityCost(){
 
 CardType Minion::getType(){
 	return CardType::Minion;
+}
+std::string Minion::getTriggerDesc(){
+	for(Ability a:trigAb){
+		cout<<a.getDesc();
+	};
+}
+
+std::string getActiveDesc(){
+	for(Ability a:actAb){
+		cout<<a.getDesc();
+	};
 }

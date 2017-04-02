@@ -18,6 +18,7 @@ public:
 	double getMaxDef() override;
 	void modifySTAT(int d, int a) override;
 };
+
 class Haste: public Enchantment{
 public:
 	int getActions() override;

@@ -9,8 +9,9 @@ protected:
 	virtual void init(){};
 public:
 	Spell(Player *own,Player *pp);	
-	virtual void cast(std::shared_ptr<Minion> m){};
+	virtual void cast(int i,std::shared_ptr<Minion> m){};
 	virtual void cast(std::shared_ptr<Ritual> m){};
+	virtual void cast();
 };
 Spell::Spell(Player *own,Player *opp){
 	this->owner=own;

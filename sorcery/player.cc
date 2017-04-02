@@ -6,6 +6,7 @@
 #include "cardtype.h"
 #include "spell.h"
 #include "enchantment.h"
+#include "specificminion.h"
 
 
 using namespace std;
@@ -13,8 +14,8 @@ class Ritual;
 
 Player::Player(string name)
 : name{name}, life{20}, magic{3}, current_magic{3}, shrine{nullptr},
-Hand{vector<shared_ptr<Card>>}, Board{vector<shared_ptr<Card>>},
-Deck{vector<shared_ptr<Card>>}, Graveyard{vector<shared_ptr<Card>>} {}
+Hand{vector<shared_ptr<Card>>}, Board{vector<shared_ptr<Minion>>},
+Deck{vector<shared_ptr<Card>>}, Graveyard{vector<shared_ptr<Minion>>} {}
 
 void Player::LifeModify(int n) {
     life += n;
@@ -42,10 +43,9 @@ void Player::play(int card, int targ, Player* p) {
     if (current_magic >= temp->getCost()) {
         if ((targ == -1)&&(!p)) { //no target
             if (temp->getType() == CardType::Spell) {
-                dynamic_pointer_cast<shared_ptr<Spell>> (temp);
-                temp->castSpell(this);
+                auto ss = make_shared<Spell>(*temp);
+                ss->cast();
                 CurMagicModify(-(temp->getCost())); //spell w/o target
-                Graveyard.emplace_back(temp);
                 Hand.erase(Hand.begin() + card - 1);
             } else if (temp->getType() == CardType::Minion) { //minion
                 auto mm = make_shared<Minion>(*temp);
@@ -70,22 +70,20 @@ void Player::play(int card, int targ, Player* p) {
                 Hand.erase(Hand.begin() + card - 1);
             }
         } else if ((targ == -1)&&p) {
-            dynamic_pointer_cast<shared_ptr<Spell>> (temp);
-            temp->castSpell(this, p); //aoe spell
+            auto ss = make_shared<Spell>(*temp);
+            ss->cast(); //aoe spell
             CurMagicModify(-(temp->getCost()));
-            Graveyard.emplace_back(temp);
             Hand.erase(Hand.begin() + card - 1);
             
         } else {
             if (temp->getType() == CardType::Spell) {
-                dynamic_pointer_cast<shared_ptr<Spell>> (temp);
-                temp->castSpell(p, targ); //spell w target
+                auto ss = make_shared<Spell>(*temp);
+                ss->cast(targ, p->getBoard(targ)); //spell w target
                 CurMagicModify(-(temp->getCost()));
-                Graveyard.emplace_back(temp);
                 Hand.erase(Hand.begin() + card - 1);
             } else if (temp->getType() == CardType::Enchantment) {
                 auto ee = make_shared<Enchantment>(*temp);
-                ee->setMinion(temp);
+                ee->setMinion(p->getBoard(targ));
                 p->getBoard(targ) = ee;
             }
         }
@@ -96,6 +94,10 @@ void Player::play(int card, int targ, Player* p) {
 
 shared_ptr<Minion> Player::getBoard (int slot) {
         return Board[slot - 1];
+}
+
+shared_ptr<Ritual> Player::getR () {
+    return shrine;
 }
 
 int Player::getPop() {
@@ -112,6 +114,17 @@ void Player::altSummon(std::shared_ptr<Minion> m) {
             if (!Board[i])
                 Board[i] = m;
         }
+    }
+}
+
+void Player::rez(Player* p) {
+    if (Graveyard.size() == 0) {
+        Hand.emplace_back(new RaiseDead(this, p));
+        current_magic += 1;
+    } else {
+        shared_ptr<Minion> temp = *(Graveyard.rbegin());
+        altSummon(temp);
+        Graveyard.pop_back();
     }
 }
 
@@ -160,7 +173,19 @@ void Player::bury() {
         for (int i = 0; i < Board.size(); i++) {
             if (Board[i]->getType() == CardType::Minion&&Board[i]->getDEF()<=0) {
                 auto mp = make_shared<Card>(*(Board[i]));
-                Graveyard.emplace_back(Board[i]);
+                
+                shared_ptr<Minion> temp;
+                while(Board[i]->getType()!=CardType::Minion){
+                    temp=std::move(Board[i]->getMinion());
+                }
+                if(temp->getDEF()<1){
+                    temp->setDEF(1);
+                }
+                if(temp->getAttack()<1){
+                    temp->setATK(1);
+                }
+                
+                Graveyard.emplace_back(temp);
                 Board[i] = nullptr;
             }
         }

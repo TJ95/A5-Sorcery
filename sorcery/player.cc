@@ -1,11 +1,11 @@
-#include "player.hpp"
-#include "observer.hpp"
-#include "subject.hpp"
-#include "card.hpp"
-#include "minion.hpp"
+#include "player.h"
+#include "observer.h"
+#include "subject.h"
+#include "card.h"
+#include "minion.h"
 #include "cardtype.h"
-#include "spell.hpp"
-#include "enchantment.hpp"
+#include "spell.h"
+#include "enchantment.h"
 
 
 using namespace std;
@@ -93,12 +93,8 @@ void Player::play(int card, int targ, Player* p) {
     }
 }
 
-shared_ptr<Card> Player::getBoard (int slot) {
-    if (slot != 6) {
+shared_ptr<Minion> Player::getBoard (int slot) {
         return Board[slot - 1];
-    } else {
-        return shrine;
-    }
 }
 
 int Player::getPop() {
@@ -115,6 +111,14 @@ void Player::altSummon(std::shared_ptr<Minion> m) {
             if (!Board[i])
                 Board[i] = m;
         }
+    }
+}
+
+void Player::use(int m, int targ, Player* p) {
+    if (targ == -1) {
+        getBoard(m - 1)->useActiveAbility(0);
+    } else {
+        getBoard(m - 1)->useActiveAbility(0, p->getBoard(targ));
     }
 }
 

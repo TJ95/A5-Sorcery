@@ -3,8 +3,8 @@
 #include <vector>
 #include <fstream>
 
-#include "player.hpp"
-#include "card.hpp"
+#include "player.h"
+#include "card.h"
 
 using namespace std;
 
@@ -163,7 +163,6 @@ int main(int argc, char* argv[]) {
             }
             else if (cmd == "end") { //end turn
                 //EoT trigger
-                
                 turnno += 1;
                 swap(activeP, otherP);
                 

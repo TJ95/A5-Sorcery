@@ -8,8 +8,8 @@
 class Player;
 class Card {
 	protected:
-		Player *owner;
-	    Player *opp;
+		Player *owner=nullptr;
+	    Player *opp=nullptr;
     	int cost;
         std::string name;
 	public:

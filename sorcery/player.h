@@ -5,10 +5,10 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include "subject.hpp"
-#include "observer.hpp"
-#include "textdisplay.hpp"
-#include "minion.hpp"
+#include "subject.h"
+#include "observer.h"
+#include "textdisplay.h"
+#include "minion.h"
 
 class Card;
 

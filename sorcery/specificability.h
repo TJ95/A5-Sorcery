@@ -1,67 +1,124 @@
 #ifndef _SPECIFICABILITY_H_
 #define _SPECIFICABILITY_H_
 #include "card.h"
+#include "player.h"
 #include "const.h"
 
 class GainStat: public Ability{
+	int DFgain;
+	int ATTKgain;
+	Minion *host;
 	public:
-		GainStat(std::string desp):Ability(desp){};
-		void cast(std::shared_ptr<Minion> *m,int DFgain, int ATTKgain);
+		GainStat(Player *own,std::string desp,int DFgain, int ATTKgain,int cost,Minion *m);
+		void cast(std::shared_ptr<Minion> m);
+		void cast();
 };
 
 class AoE: public Ability{
+	int attk;
 	public:
-		AoE(std::string desp):Ability(desp){};
-		void cast(int attk);
-		
+		AoE(Player *own, Player *opp,std::string desp,int cost,int attk);
+		void cast(std::shared_ptr<Minion> m);
 };
 
 class AoEHealing: public Ability{
+	int gain;
 	public:
-		AoEHealing(std::string desp):Ability(desp){};
-		void cast(int gain);
+		AoEHealing(Player *own,std::string desp,int gain,int cost);
+		void cast(std::shared_ptr<Minion> m);
 };
 
 class SingleDamage: public Ability{
+	int attk;
 	public:
-		SingleDamage(std::string desp):Ability(desp){};
-		void cast(std::shared_ptr<Minion> *m,int attk);
+		SingleDamage(std::string desp,int attk,int cost);
+		void cast(std::shared_ptr<Minion> *m);
 };
 
 class Summon: public Ability{
+	std::shared_ptr<Minion> m;
+	int num;
 	public:
-		GainStat(std::string desp):Ability(desp){};
-		void cast(shared_ptr<Minion> m);
+		Summon(Player* p,std::string desp, std::shared_ptr<Minion> m,int num);
+		void cast(std::shared_ptr<Minion> m);
 };
-namespace Card::Ability{
-	void GainStat::cast(std::shared_ptr<Minion> *m,int DFgain, int ATTKgain){
-			m->modifyStat(DFgain,ATTKgain);
+
+	GainStat::GainStat(Player *own,std::string desp,int DFgain, int ATTKgain,int cost,Minion *m){
+		this->owner=own;
+		this->desp=desp;
+		this->DFgain=DFgain;
+		this->ATTKgain=ATTKgain;
+		this->cost=cost;
+		host=m;
 	}
-	void AoE::cast(int attk){
-		int pop = opp->getPop();
-		for(int i = 0; i <pop;i++){
-			auto m = opp->getBoard(i);
-			m->modifyStat(0,-attk);
+
+	void GainStat::cast(std::shared_ptr<Minion> m){
+			m->modifySTAT(DFgain,ATTKgain);
+	}
+
+	void GainStat::cast(){
+			host->modifySTAT(DFgain,ATTKgain);
+	}
+
+	AoE::AoE(Player *own, Player *opp,std::string desp,int cost,int attk){
+		this->owner=own;
+		this->opp=opp;
+		this->desp=desp;
+		this->attk=attk;
+		this->cost=cost;
+	}
+	void AoE::cast(std::shared_ptr<Minion> mi){
+		if(opp!=nullptr){
+			int pop = opp->getPop();
+			for(int i = 0; i <pop;i++){
+				auto m = opp->getBoard(i);
+				m->modifySTAT(0,-attk);
+			}
+		}
+		if(owner!=nullptr){
+			int pop = owner->getPop();
+			for(int i = 0; i <pop;i++){
+				auto m = own->getBoard(i);
+				m->modifySTAT(0,-attk);
+			}
 		}
 	}
-	void AoEHealing::cast(int attk){
+
+	AoEHealing::AoEHealing(Player *own,std::string desp,int gain,int cost){
+		this->owner=own;
+		this->desp=desp;
+		this->gain=gain;
+		this->cost=cost;
+	}
+	void AoEHealing::cast(std::shared_ptr<Minion> mi){
 		int pop = owner->getPop();
 		for(int i = 0; i <pop;i++){
 			auto m = owner->getBoard(i);
-			m->modifyStat(0,-attk);
+			m->modifyStat(gain,0);
 		}
 	}
-	void SingleDamage::cast(std::shared_ptr<Minion> m,int attk){
+
+	SingleDamage::SingleDamage(std::string desp,int attk,int cost){
+		this->desp=desp;
+		this->attk=attk;
+		this->cost=cost;
+	}
+
+	void SingleDamage::cast(std::shared_ptr<Minion> m){
 		m->modifyStat(0,-attk);
 	}
-	void Summon::cast(std::shared_ptr<Minion> m){
-		if(owner->getPop>=maxPop){
-			//throw error
-		}
-		else{
-			owner->altSummon(m);
-		}
-	}
-}
 
+	Summon::Summon(Player *own,std::string desp, std::shared_ptr<Minion> m,int num){
+		this->m=m;
+		this->desp=desp;
+		owner=own;
+		this->num=num;
+	}
+
+	void Summon::cast(std::shared_ptr<Minion> mi){
+		for(int i = 0; i <num i++){
+			std::shared_ptr<Minion> o = std::make_shared<Event>(*m);
+			owner->altSummon(o);
+		}		
+	}
 #endif

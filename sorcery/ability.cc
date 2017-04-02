@@ -1,12 +1,16 @@
 #include "ability.h"
 #include "cardtype.h"
 
-Ability::Ability(std::string desp):descrip(desp){};
+Ability::Ability(){};
 
 CardType Ability::getType(){
 	return CardType::Ability;
 }
 
-std::string Ability::getDesc(){
+std::string Ability::getDesp(){
 	return desp;
+}
+
+int Ability::getCost(){
+	return cost;
 }

@@ -2,9 +2,11 @@
 #define _MINION_H_
 
 #include <vector>
+#include <map>
 #include "card.h"
-#include "player.h"
 #include "cardtype.h"
+#include "ability.h"
+#include <memory>
 class Player;
 class Minion: public Card {
 protected:
@@ -13,8 +15,8 @@ protected:
     int maxDef = 0;
     int abilityCost = 0;
     int actions = 0;
-    vector<Ability> trigAb;
-    vector<Ability> actAb;
+    std::vector<Ability> actAb;
+    std::map<std::string,std::vector<Ability>> trigAb;
 
 public:
 	Minion(Player *owner, Player *opp);
@@ -32,10 +34,11 @@ public:
     virtual void setDEF(int d); // this changes max def
     virtual void modifySTAT(double a, double d); // this adds def up to its max
     virtual CardType getType();
-    virtual void useActiveAbility(std::shared_ptr<Card> c);
-    virtual void useTriggerAbility(std::shared_ptr<Card> c);
-    virtual std::string getTriggerDesc();
-    virtual std::string getActiveDesc();
+    virtual void useActiveAbility(std::shared_ptr<Minion> c,int i);
+    virtual void useTriggerAbility(std::shared_ptr<Minion> c,std::string trigger);
+    virtual void useTriggerAbility(std::string trigger);
+    virtual std::map<std::string,std::vector<Ability>> getTriggerDesc();
+    virtual std::vector<Ability> getActiveDesc();
 
 };
 

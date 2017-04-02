@@ -63,14 +63,26 @@ int Minion::getAbilityCost(){
 CardType Minion::getType(){
 	return CardType::Minion;
 }
-std::string Minion::getTriggerDesc(){
-	for(Ability a:trigAb){
-		cout<<a.getDesc();
-	};
+
+ void Minion::useActiveAbility(std::shared_ptr<Card> c,int i){
+ 	actAb[i].cast(c);
+ }
+ void Minion::useTriggerAbility(std::shared_ptr<Card> c,string trigger){
+ 	std::vector<Ability> v = trigAb.find(trigger)->second;
+ 	for(Ability a:v ){
+ 		v.cast(c);
+ 	}
+ }
+ void Minion::useTriggerAbility(std::string trigger){
+ 	std::vector<Ability> v = trigAb.find(trigger)->second;
+ 	for(Ability a:v ){
+ 		v.cast(nullptr);
+ 	}
+ }
+std::map<string,std::vector<Ability>> Minion::getTrigger(){
+	return trigAb;
 }
 
-std::string getActiveDesc(){
-	for(Ability a:actAb){
-		cout<<a.getDesc();
-	};
+std::vector<Ability> getActiveDesc(){
+	return actAb;
 }

@@ -13,8 +13,8 @@ class Ritual;
 
 Player::Player(string name)
 : name{name}, life{20}, magic{3}, current_magic{3}, shrine{nullptr},
-Hand{vector<shared_ptr<Card>>(5,nullptr)}, Board{vector<shared_ptr<Card>>(5, nullptr)},
-Deck{vector<shared_ptr<Card>>(0, nullptr)}, Graveyard{vector<shared_ptr<Card>>(0,nullptr)} {}
+Hand{vector<shared_ptr<Card>>}, Board{vector<shared_ptr<Card>>},
+Deck{vector<shared_ptr<Card>>}, Graveyard{vector<shared_ptr<Card>>} {}
 
 void Player::LifeModify(int n) {
     life += n;
@@ -48,25 +48,25 @@ void Player::play(int card, int targ, Player* p) {
                 Graveyard.emplace_back(temp);
                 Hand.erase(Hand.begin() + card - 1);
             } else if (temp->getType() == CardType::Minion) { //minion
+                auto mm = make_shared<Minion>(*temp);
                 for (int i = 0; i < 4; i++) {
                     if (i == 4) {
                         cout << "board has no space" << endl;
                         break;
                     }
                     else if (!Board[i]) {
-                        Board[i] = temp;
+                        Board[i] = mm;
                         Hand.erase(Hand.begin() + card - 1);
                         CurMagicModify(-(temp->getCost()));
                         break;
                     }
                 }
             } else if (temp->getType() == CardType::Ritual) { //ritual
-                dynamic_pointer_cast<shared_ptr<Ritual>> (temp);
                 if (!shrine) {
                     Graveyard.emplace_back(shrine);
                 }
                 CurMagicModify(-(temp->getCost()));
-                shrine = temp;
+                shrine = make_shared<Ritual>(*temp);
                 Hand.erase(Hand.begin() + card - 1);
             }
         } else if ((targ == -1)&&p) {
@@ -84,8 +84,9 @@ void Player::play(int card, int targ, Player* p) {
                 Graveyard.emplace_back(temp);
                 Hand.erase(Hand.begin() + card - 1);
             } else if (temp->getType() == CardType::Enchantment) {
-                dynamic_pointer_cast<shared_ptr<Enchantment>> (temp);
-                //????
+                auto ee = make_shared<Enchantment>(*temp);
+                ee->setMinion(temp);
+                p->getBoard(targ) = ee;
             }
         }
     } else {
@@ -122,6 +123,22 @@ void Player::use(int m, int targ, Player* p) {
     }
 }
 
+void Player::trigger(Player *p, std::string s, int targ, int owner) {
+    if (targ == -1) {
+        for (int i = 0; i < 5; i++) {
+            Board[i]->useTriggerAbility(s);
+        }
+    } else {
+        Player* targ_owner = this;
+        if (owner == 2) {
+            targ_owner = p;
+        }
+        for (int i = 0; i < 5; i++) {
+            Board[i]->useTriggerAbility(targ_owner->getBoard(targ), s);
+        }
+    }
+}
+
 void Player::draw(int time) {
     if (Hand.size() < 5) {
         for (int i = 0; i < time; i++) {
@@ -142,10 +159,29 @@ void Player::bury() {
     if (Board.size() != 0) {
         for (int i = 0; i < Board.size(); i++) {
             if (Board[i]->getType() == CardType::Minion&&Board[i]->getDEF()<=0) {
+                auto mp = make_shared<Card>(*(Board[i]));
                 Graveyard.emplace_back(Board[i]);
                 Board[i] = nullptr;
             }
         }
+    }
+}
+
+void Player::buryR() {
+    if (shrine->getCharge() == 0) {
+        auto mp = make_shared<Card>(*shrine);
+        Graveyard.emplace_back(shrine);
+        shrine = nullptr;
+    }
+}
+
+void Player::takeback(int i) {
+    if (Hand.size() == 5) {
+        Graveyard.emplace_back(Board[i]);
+        Board[i] = nullptr;
+    } else {
+        Hand.emplace_back(Board[i]);
+        Board[i] = nullptr;
     }
 }
 

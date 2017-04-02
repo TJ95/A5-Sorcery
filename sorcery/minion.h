@@ -13,7 +13,6 @@ protected:
     double attk = 0;
     double defence= 0;
     int maxDef = 0;
-    int abilityCost = 0;
     int actions = 0;
     std::vector<Ability> actAb;
     std::map<std::string,std::vector<Ability>> trigAb;
@@ -28,16 +27,16 @@ public:
     virtual double getAttack();
     virtual double getDEF();
     virtual int getMaxDef();
-    virtual int getAbilityCost();
+    virtual int getAC(int i);
     virtual void setATK(int a);
     virtual void setDEF(int d); // this changes max def
     virtual void modifySTAT(double a, double d); // this adds def up to its max
     virtual CardType getType();
-    virtual void useActiveAbility(int i,std::shared_ptr<Minion> c=nullptr);
+    virtual void useActiveAbility(int i,std::shared_ptr<Minion> target=nullptr);
     virtual void useTriggerAbility(std::shared_ptr<Minion> c,std::string trigger);
     virtual void useTriggerAbility(std::string trigger);
-    virtual std::map<std::string,std::vector<Ability>> getTriggerDesc();
-    virtual std::vector<Ability> getActiveDesc();
+    virtual std::map<std::string,std::vector<Ability>> getTrigger();
+    virtual std::vector<Ability> getActive();
 
 };
 

@@ -12,37 +12,37 @@ public:
 };
 
 class BoneGolem: public Minion{
-	initAbilities();
+	void initAbilities();
 	public:
 		BoneGolem(Player *owner, Player *opp);
 };
 
 class FireElemental: public Minion{
-	initAbilities();
+	void initAbilities();
 	public:
 		FireElemental(Player *owner, Player *opp);
 };
 
 class PotionSeller: public Minion{
-	initAbilities();
+	void initAbilities();
 	public:
 		PotionSeller(Player *owner, Player *opp);
 };
 
 class NovicePyromancer: public Minion{
-	initAbilities();
+	void initAbilities();
 	public:
 		NovicePyromancer(Player *owner, Player *opp);
 };
 
 class ApprenticeSummoner: public Minion{
-	initAbilities();
+	void initAbilities();
 	public:
 		ApprenticeSummoner(Player *owner, Player *opp);
 };
 
 class MasterSummoner: public Minion{
-	initAbilities();
+	void initAbilities();
 	public:
 		MasterSummoner(Player *owner, Player *opp);
 };

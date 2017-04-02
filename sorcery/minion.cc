@@ -27,7 +27,7 @@ double Minion::getDEF() {
 }
 
 void Minion::setDEF(int def) {
-    defence = def;
+    defence = (double)def;
     maxDef = def;
 }
 
@@ -36,7 +36,7 @@ int Minion::getMaxDef(){
 }
 
 void Minion::setATK(int attk) {
-    attk = attk;
+    attk = (double)attk;
 }
 
 void Minion::modifySTAT(double a, double d) {
@@ -52,8 +52,8 @@ int Minion::getActions(){
 	return actions;
 }
 
-int Minion::getAbilityCost(){
-	return abilityCost;
+int Minion::getAC(int i){
+	return actAb[i].getCost();
 }
 
 CardType Minion::getType(){
@@ -82,6 +82,6 @@ std::map<string,std::vector<Ability>> Minion::getTrigger(){
 	return trigAb;
 }
 
-std::vector<Ability> getActiveDesc(){
+std::vector<Ability> getActive(){
 	return actAb;
 }

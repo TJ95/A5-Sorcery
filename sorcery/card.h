@@ -15,6 +15,7 @@ class Card {
 	public:
 		Card();
 	    Card(Player *owner, Player *opp);
+	    Player* getOwner();
 	    int getCost();
 	    std::string getName();
 	    virtual CardType getType();

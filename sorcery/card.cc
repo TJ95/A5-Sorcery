@@ -1,6 +1,6 @@
 #include "card.h"
 using namespace std;
-
+class Player;
 Card::Card(){
 
 }
@@ -18,4 +18,8 @@ int Card::getCost(){
 
 string Card::getName(){
 	return name;
+}
+
+Player* Card::getOwner(){
+	return owner;
 }

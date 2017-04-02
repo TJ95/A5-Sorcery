@@ -1,14 +1,21 @@
-#ifndef spell_hpp
-#define spell_hpp
-
+#ifndef _SPELL_H_
+#define _SPELL_H_
 #include "card.h"
-#include "player.h"
-#include <vector>
-
-class Spell: public Card {
+class Minion;
+class Ritual;
+class Spell: public Card{
+protected:
+	std::string desp;
+	virtual void init(){};
 public:
-    virtual void castSpell(Card c) = 0;
+	Spell(Player *own,Player *pp);	
+	virtual void cast(std::shared_ptr<Minion> m){};
+	virtual void cast(std::shared_ptr<Ritual> m){};
 };
+Spell::Spell(Player *own,Player *opp){
+	this->owner=own;
+	this->opp=opp;
+	init();
+}
 
 
-#endif /* spell_hpp */

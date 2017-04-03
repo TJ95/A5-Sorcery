@@ -1,31 +1,31 @@
 #ifndef _SPECIFICRITUAL_H_
 #define _SPECIFICRITUAL_H_
-#include "ritual h"
+#include "ritual.h"
 #include <string>
 #include "const.h"
 #include "player.h"
 #include "minion.h"
 class DarkRitual:public Ritual{
 	protected:
-		void init override();
+		void init() override;
 	public:
-		DarkRitual(Player owner*, Player *opp):Ritual(owner,opp){init()};
+    DarkRitual(Player *owner, Player *opp):Ritual(owner,opp){init();}
 		void cast(std::string trigger) override;
 };
 
 class AuraOfPower:public Ritual{
 	protected:
-		void init override();
+		void init() override;
 	public:
-		AuraOfPower(Player owner*, Player *opp):Ritual(owner,opp){init()};
+    AuraOfPower(Player *owner, Player *opp):Ritual(owner,opp){init();}
 		void cast(std::string trigger,std::shared_ptr<Minion> m) override;
 };
 
 class Standstill:public Ritual{
 	protected:
-		void init override();
+		void init() override;
 	public:
-		Standstill(Player owner*, Player *opp):Ritual(owner,opp){init()};
+    Standstill(Player *owner, Player *opp):Ritual(owner,opp){init();}
 		void cast(std::string trigger,std::shared_ptr<Minion> m) override;
 };
 
@@ -54,8 +54,8 @@ void AuraOfPower::init(){
 void AuraOfPower::cast(std::string trigger,std::shared_ptr<Minion> m){
 	if(trigger==M_in&&charge>0){
 		charge--;
-		m->setATK(m->getAttack+1);
-		m->setDEF(m->getDEF+1);
+		m->setATK(m->getAttack()+1);
+		m->setDEF(m->getDEF()+1);
 	}
 }
 
@@ -67,7 +67,7 @@ void Standstill::init(){
 	desp="Whenever a minion enter a play, destroy it";
 }
 
-void AuraOfPower::cast(std::string trigger,std::shared_ptr<Minion> m){
+void Standstill::cast(std::string trigger,std::shared_ptr<Minion> m){
 	if(trigger==M_in&&charge>0){
 		charge-=2;
 		m->modifySTAT(0,-m->getDEF());

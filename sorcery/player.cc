@@ -6,16 +6,18 @@
 #include "cardtype.h"
 #include "spell.h"
 #include "enchantment.h"
-#include "specificminion.h"
-
+#include "specificminion.cc"
+#include "ritual.h"
+#include "specificspell.cc"
 
 using namespace std;
 class Ritual;
 
 Player::Player(string name)
-: name{name}, life{20}, magic{3}, current_magic{3}, shrine{nullptr},
-Hand{vector<shared_ptr<Card>>}, Board{vector<shared_ptr<Minion>>},
-Deck{vector<shared_ptr<Card>>}, Graveyard{vector<shared_ptr<Minion>>} {}
+: name{name}, life{20}, magic{3}, current_magic{3}, shrine{nullptr}
+//Hand{vector<shared_ptr<Card>>}, Board{vector<shared_ptr<Minion>>},
+//Deck{vector<shared_ptr<Card>>}, Graveyard{vector<shared_ptr<Minion>>} {}
+{}
 
 void Player::LifeModify(int n) {
     life += n;
@@ -37,6 +39,25 @@ void Player::DeckSet(vector<shared_ptr<Card>> d) {
     Deck = d;
 }
 
+void Player::play(int card) {
+    shared_ptr<Card> temp = Hand[card - 1];
+    if (temp->getType() == CardType::Minion) {
+        auto mm = make_shared<Minion>(*temp);
+        for (int i = 0; i < 4; i++) {
+            if (i == 4) {
+                cout << "board has no space" << endl;
+                break;
+            }
+            else if (!Board[i]) {
+                Board[i] = mm;
+                Hand.erase(Hand.begin() + card - 1);
+                CurMagicModify(-(temp->getCost()));
+                break;
+            }
+        }
+    }
+}
+
 //playing cards
 void Player::play(int card, int targ, Player* p) {
     shared_ptr<Card> temp = Hand[card - 1];
@@ -47,20 +68,6 @@ void Player::play(int card, int targ, Player* p) {
                 ss->cast();
                 CurMagicModify(-(temp->getCost())); //spell w/o target
                 Hand.erase(Hand.begin() + card - 1);
-            } else if (temp->getType() == CardType::Minion) { //minion
-                auto mm = make_shared<Minion>(*temp);
-                for (int i = 0; i < 4; i++) {
-                    if (i == 4) {
-                        cout << "board has no space" << endl;
-                        break;
-                    }
-                    else if (!Board[i]) {
-                        Board[i] = mm;
-                        Hand.erase(Hand.begin() + card - 1);
-                        CurMagicModify(-(temp->getCost()));
-                        break;
-                    }
-                }
             } else if (temp->getType() == CardType::Ritual) { //ritual
                 if (!shrine) {
                     Graveyard.emplace_back(shrine);

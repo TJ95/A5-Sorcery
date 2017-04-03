@@ -2,11 +2,12 @@
 #include "minion.h"
 #include "cardtype.h"
 #include "specificability.h"
+#include "ritual.h"
 
 class Banish:public Spell{
 	void init()override;
 	public:
-		Banish(Player *own,Player *opp):Spell(own,opp){init()};
+		Banish(Player *own,Player *opp):Spell(own,opp){init();};
 		void cast(int i,std::shared_ptr<Minion> m)override;
 		void cast(std::shared_ptr<Ritual> r)override;
 };
@@ -14,47 +15,47 @@ class Banish:public Spell{
 class Unsummon:public Spell{
 	void init()override;
 	public:
-		Unsummon(Player *own,Player *opp):Spell(own,opp){init()};
-		void cast(std::shared_ptr<Minion> m)override;
+    Unsummon(Player *own,Player *opp):Spell(own,opp){init();};
+		void cast(int i, std::shared_ptr<Minion> m) override;
 };
 
 class Recharge:public Spell{
 	void init()override;
 	public:
-		Recharge(Player *own,Player *opp):Spell(own,opp){init()};
+    Recharge(Player *own,Player *opp):Spell(own,opp){init();};
 		void cast()override;
 };
 
 class Disenchant:public Spell{
 	void init()override;
 	public:
-		Disenchant(Player *own,Player *opp):Spell(own,opp){init()};
+    Disenchant(Player *own,Player *opp):Spell(own,opp){init();};
 		void cast(int i,std::shared_ptr<Minion> m )override;
 };
 
 class RaiseDead:public Spell{
 void init()override;
 	public:
-		RaiseDead(Player *own,Player *opp):Spell(own,opp){init()};
+    RaiseDead(Player *own,Player *opp):Spell(own,opp){init();};
 		void cast()override;
 };
 
 class Blizzard:public Spell{
 void init()override;
 	public:
-		Blizzard(Player *own,Player *opp):Spell(own,opp){init()};
+    Blizzard(Player *own,Player *opp):Spell(own,opp){init();};
 		void cast()override;
 };
 
 void Banish::init(){
 	name = "Banish";
-	desp = "Destroy target minion or ritual"
+	desp = "Destroy target minion or ritual";
 	cost=2;
 }
 
 void Banish::cast(int i,std::shared_ptr<Minion> m){
 	int hp = m->getMaxDef();
-	m->setDef(-hp);
+	m->setDEF(-hp);
 }
 //TODO
 void Banish::cast(std::shared_ptr<Ritual> r){
@@ -88,7 +89,7 @@ void Disenchant::init(){
 	desp="Destroy the top enchantment on target minion";
 }
 void Disenchant::cast(int i,std::shared_ptr<Minion> m){
-	if(m->getType==Enchantment){
+    if(m->getType()==CardType::Enchantment){
 		m=m->getMinion();
 	}
 }
@@ -96,12 +97,11 @@ void Disenchant::cast(int i,std::shared_ptr<Minion> m){
 void RaiseDead::init(){
 	cost=1;
 	name="Raise Dead";
-	desp="Resurrect the top minion in your graveyard and set its 
-		  defence to 1";
+	desp="Resurrect the top minion in your graveyard and set its defence to 1";
 }
 
 void RaiseDead::cast(){
-	owner->rez();
+	owner->rez(opp);
 }
 
 void Blizzard::init(){

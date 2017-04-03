@@ -7,13 +7,16 @@
 #include "player.h"
 #include "card.h"
 #include "specificminion.cc"
+#include "specificenchantments.cc"
+#include "specificritual.h"
+#include "specificspell.cc"
 
 using namespace std;
 
 //deck_loader loads from a .deck file and returns a vector containing
 //  the name of the cards in the deck
-vector<Card*> deck_loader(string deckname, Player* owner, Player* opp) {
-    vector<Card*> return_deck;
+vector<shared_ptr<Card>> deck_loader(string deckname, Player* owner, Player* opp) {
+    vector<shared_ptr<Card>> return_deck;
     string temp;
     ifstream ifs{deckname+".deck"};
     while (getline(ifs,temp)) {
@@ -57,7 +60,7 @@ vector<Card*> deck_loader(string deckname, Player* owner, Player* opp) {
             auto cp = make_shared<Card> ( new Blizzard (owner, opp));
             return_deck.emplace_back(cp);
         } else if (temp == "Giant Strength") {
-            auto cp = make_shared<Card> ( new GiantStrenth (owner, opp));
+            auto cp = make_shared<Card> ( new GiantStrength (owner, opp));
             return_deck.emplace_back(cp);
         } else if (temp == "Enrage") {
             auto cp = make_shared<Card> ( new Enrage (owner, opp));
@@ -74,13 +77,13 @@ vector<Card*> deck_loader(string deckname, Player* owner, Player* opp) {
             auto cp = make_shared<Card> ( new DarkRitual (owner, opp));
             return_deck.emplace_back(cp);
         } else if (temp == "Aura of Power") {
-            auto cp = make_shared<Card> ( new AuraofPower (owner, opp));
+            auto cp = make_shared<Card> ( new AuraOfPower (owner, opp));
             return_deck.emplace_back(cp);
         } else if (temp == "Standstill") {
             auto cp = make_shared<Card> ( new Standstill (owner, opp));
             return_deck.emplace_back(cp);
         } else {
-            cout << "There is no such card as" << temp << "!" << end;
+            cout << "There is no such card as" << temp << "!" << endl;
         }
     }
     return return_deck;
@@ -198,7 +201,7 @@ int main(int argc, char* argv[]) {
                 activeP->discard(num);
             }
             else if (cmd == "attack") { //minion attack
-                int corps = activeP->Graveyard.size();
+                int heads = activeP->getPop();
                 if (inpt>>num) {
                     if (inpt>>num2) {
                         activeP->getBoard(num - 1)->attack(otherP->getBoard(num - 1));
@@ -210,15 +213,15 @@ int main(int argc, char* argv[]) {
                 } else {
                     cin >> num;
                     if (cin>>num2) {
-                        activeP->getBoard(num - 1)->attck(otherP->getBoard(num - 1));
+                        activeP->getBoard(num - 1)->attack(otherP->getBoard(num - 1));
                         activeP->bury();
                         otherP->bury();
                     } else {
                         activeP->getBoard(num - 1)->attack(otherP);
                     }
                 }
-                if (activeP->Graveyard.size() > corps) {
-                    int j = activeP->Graveyard.size() - corps;
+                if (activeP->getPop() > heads) {
+                    int j = activeP->getPop() - heads;
                     for (int i =0; i < j; i++) {
                         activeP->trigger(otherP, M_out, -1, 0);
                     }
@@ -237,9 +240,9 @@ int main(int argc, char* argv[]) {
                             activeP->play(num, num3, pp);
                         }
                     } else {
-                        activeP->play(num, -1, nullptr);
-                        activeP->trigger(otherP, M_in, -1, 0);
-                        othePr->trigger(activeP, M_in, -1, 0);
+                        activeP->trigger(otherP, M_in, num, 1);
+                        otherP->trigger(activeP, M_in, num, 2);
+                        activeP->play(num);
                     }
                 } else {
                     inpt >> num2;
@@ -249,9 +252,9 @@ int main(int argc, char* argv[]) {
                     } else if (inpt >> num3){
                         activeP->play(num, num3, pp);
                     } else {
-                        activeP->play(num, -1, nullptr);
-                        activeP->trigger(otherP, M_in, -1, 0);
-                        otherP->trigger(activeP, M_in, -1, 0);
+                        activeP->trigger(otherP, M_in, num, 1);
+                        otherP->trigger(activeP, M_in, num, 2);
+                        activeP->play(num);
                     }
                 }
                 if (isTesting) activeP->CurMagicSet(0);

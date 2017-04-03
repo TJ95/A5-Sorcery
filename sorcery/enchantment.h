@@ -36,6 +36,6 @@ protected:
     std::string getDesp();
     std::string getAttkMod();
     std::string getDefMod();
-    std::shared_ptr<Minion> getMinion();
+    std::shared_ptr<Minion> getMinion() override;
 };
 #endif

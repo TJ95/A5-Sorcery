@@ -31,7 +31,7 @@ class Player: public Observer, public Subject {
     void CurMagicModify(int n);
     void CurMagicSet(int n);
     void DeckSet(std::vector<std::shared_ptr<Card>> d);
-    void play(int card); //plays a minion/ritual
+    void play(int card); //plays a minion
     void play(int card, int targ, Player* p); //plays a targeted Spell/Enchant
     void use(int m, int targ, Player* p);
     std::shared_ptr<Minion> getBoard (int slot);

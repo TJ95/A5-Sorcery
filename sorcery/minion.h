@@ -38,6 +38,7 @@ public:
     virtual void useTriggerAbility(std::string trigger);
     virtual std::map<std::string,std::vector<Ability>> getTrigger();
     virtual std::vector<Ability> getActive();
+    virtual std::shared_ptr<Minion> getMinion();
 
 };
 

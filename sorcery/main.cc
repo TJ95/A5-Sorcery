@@ -10,6 +10,7 @@
 #include "specificenchantments.cc"
 #include "specificritual.h"
 #include "specificspell.cc"
+#include "const.h"
 
 using namespace std;
 
@@ -240,9 +241,13 @@ int main(int argc, char* argv[]) {
                             activeP->play(num, num3, pp);
                         }
                     } else {
-                        activeP->trigger(otherP, M_in, num, 1);
-                        otherP->trigger(activeP, M_in, num, 2);
-                        activeP->play(num);
+                        if (activeP->getBoard(num)->getType() == CardType::Minion) {
+                            activeP->trigger(otherP, M_in, num, 1);
+                            otherP->trigger(activeP, M_in, num, 2);
+                            activeP->play(num);
+                        } else {
+                            activeP->play(num, -1, nullptr);
+                        }
                     }
                 } else {
                     inpt >> num2;
@@ -252,9 +257,13 @@ int main(int argc, char* argv[]) {
                     } else if (inpt >> num3){
                         activeP->play(num, num3, pp);
                     } else {
-                        activeP->trigger(otherP, M_in, num, 1);
-                        otherP->trigger(activeP, M_in, num, 2);
-                        activeP->play(num);
+                        if (activeP->getBoard(num)->getType() == CardType::Minion) {
+                            activeP->trigger(otherP, M_in, num, 1);
+                            otherP->trigger(activeP, M_in, num, 2);
+                            activeP->play(num);
+                        } else {
+                            activeP->play(num, -1, nullptr);
+                        }
                     }
                 }
                 if (isTesting) activeP->CurMagicSet(0);

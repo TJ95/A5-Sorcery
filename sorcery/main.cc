@@ -271,7 +271,35 @@ int main(int argc, char* argv[]) {
                 otherP->bury();
             }
             else if (cmd == "use") { //minion ability
-                cout << "use" << endl;
+                int heads = activeP->getPop();
+                if (isTesting) activeP->CurMagicSet(100);
+                if (!(inpt>>num)) {
+                    cin >> num;
+                    if (cin>>num2) {
+                        Player* pp = (num2 == 1)? activeP:otherP;
+                        cin >> num3;
+                        activeP->use(num, num3, pp);
+                    } else {
+                        activeP->use(num, -1, nullptr);
+                    }
+                } else {
+                    inpt >> num2;
+                        Player* pp = (num2 == 1)? activeP:otherP;
+                    if (inpt >> num3) {
+                        activeP->use(num, num3, pp);
+                    } else {
+                        activeP->use(num, -1, nullptr);
+                    }
+                }
+                if (isTesting) activeP->CurMagicSet(0);
+                activeP->bury();
+                otherP->bury();
+                if (activeP->getPop() > heads) {
+                    int j = activeP->getPop() - heads;
+                    for (int i =0; i < j; i++) {
+                        activeP->trigger(otherP, M_out, -1, 0);
+                    }
+                }
             }
             else if (cmd == "inspect") { //description of a card
                 cout << "inspect" << endl;

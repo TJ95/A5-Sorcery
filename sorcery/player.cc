@@ -85,7 +85,11 @@ void Player::play(int card, int targ, Player* p) {
         } else {
             if (temp->getType() == CardType::Spell) {
                 auto ss = make_shared<Spell>(*temp);
-                ss->cast(targ, p->getBoard(targ)); //spell w target
+                if (targ != 6) {
+                    ss->cast(targ, p->getBoard(targ)); //spell w target
+                } else {
+                    ss->cast(p->getR());
+                }
                 CurMagicModify(-(temp->getCost()));
                 Hand.erase(Hand.begin() + card - 1);
             } else if (temp->getType() == CardType::Enchantment) {
@@ -93,6 +97,21 @@ void Player::play(int card, int targ, Player* p) {
                 ee->setMinion(p->getBoard(targ));
                 p->getBoard(targ) = ee;
             }
+        }
+    } else {
+        cout << "not enough mana!" << endl;
+    }
+}
+//use!
+void Player::use(int m, int targ, Player* p) {
+    shared_ptr<Minion> temp = Board[m - 1];
+    if (current_magic >= temp->getAC(0)) {
+        if (targ == -1) {
+            temp->useActiveAbility(0);
+            CurMagicModify(-temp->getAC(0));
+        } else {
+            temp->useActiveAbility(0, p->getBoard(targ));
+            CurMagicModify(-temp->getAC(0));
         }
     } else {
         cout << "not enough mana!" << endl;
@@ -135,13 +154,6 @@ void Player::rez(Player* p) {
     }
 }
 
-void Player::use(int m, int targ, Player* p) {
-    if (targ == -1) {
-        getBoard(m - 1)->useActiveAbility(0);
-    } else {
-        getBoard(m - 1)->useActiveAbility(0, p->getBoard(targ));
-    }
-}
 
 void Player::trigger(Player *p, std::string s, int targ, int owner) {
     if (targ == -1) {
@@ -183,7 +195,7 @@ void Player::bury() {
                 
                 shared_ptr<Minion> temp;
                 while(Board[i]->getType()!=CardType::Minion){
-                    temp=std::move(Board[i]->getMinion());
+                    temp = move(Board[i]->getMinion());
                 }
                 if(temp->getDEF()<1){
                     temp->setDEF(1);
